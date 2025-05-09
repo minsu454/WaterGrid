@@ -1,6 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
@@ -47,6 +44,9 @@ public sealed class InputManager : MonoBehaviour
     /// </summary>
     public void Canceled()
     {
+        if (firstLinkedObj == null)
+            return;
+
         if (GetSelected(out LinkedObject link) is true)
         {
             firstLinkedObj.ConnectLine(link);

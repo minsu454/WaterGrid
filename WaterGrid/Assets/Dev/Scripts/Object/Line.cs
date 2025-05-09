@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class Line : MonoBehaviour, IObjectPoolable<Line>
@@ -15,16 +14,24 @@ public class Line : MonoBehaviour, IObjectPoolable<Line>
     /// </summary>
     public void Link(Transform startTr)
     {
-        lineRenderer.SetPosition(0, startTr.position);
+        SetLinePosition(0, startTr.position);
         PointTr.Add(startTr);
     }
 
     /// <summary>
     /// 업데이트 함수
     /// </summary>
-    public void OnUpdate(Vector2 pos)
+    public void OnUpdate(int idx, Vector2 pos)
     {
-        lineRenderer.SetPosition(1, pos);
+        SetLinePosition(idx, pos);
+    }
+
+    /// <summary>
+    /// 라인 위치 세팅 함수
+    /// </summary>
+    public void SetLinePosition(int idx, Vector3 pos)
+    {
+        lineRenderer.SetPosition(idx, pos);
     }
 
     /// <summary>

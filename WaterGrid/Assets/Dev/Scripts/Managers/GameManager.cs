@@ -1,6 +1,4 @@
 using Common.Pool;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
@@ -13,7 +11,7 @@ public class GameManager : MonoBehaviour
     private void Awake()
     {
         instance = this;
-        lineObjectPool = new ObjectPool<Line>("Line", baseObject, null, 3);
+        lineObjectPool = new ObjectPool<Line>(nameof(Line), baseObject, null, 3);
     }
 
     private void OnDestroy()
