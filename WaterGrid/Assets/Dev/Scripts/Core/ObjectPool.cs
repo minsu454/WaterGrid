@@ -156,7 +156,7 @@ namespace Common.Pool
         {
             T component;
 
-            if (objectQueue.Peek().gameObject.activeInHierarchy)
+            if (objectQueue.TryPeek(out component) is false)
             {
                 Debug.LogWarning($"ObjectPool CreateImpl : {poolName}");
                 component = CreateImpl();
@@ -166,7 +166,6 @@ namespace Common.Pool
                 component = objectQueue.Dequeue();
             }
 
-            objectQueue.Enqueue(component);
             return component;
         }
 
@@ -179,6 +178,7 @@ namespace Common.Pool
                 return;
 
             pool.transform.SetParent(poolTr);
+            objectQueue.Enqueue(pool);
             pool.gameObject.SetActive(false);
         }
     }

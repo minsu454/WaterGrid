@@ -5,10 +5,15 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 
-public class InputManager : MonoBehaviour
+public sealed class InputManager : MonoBehaviour
 {
     [SerializeField] private InputType inputType;       //인풋 타입
     private LinkedObject firstLinkedObj;
+
+    public static Vector2 MousePoint
+    {
+        get { return Camera.main.ScreenToWorldPoint(Input.mousePosition); }
+    }
 
     /// <summary>
     /// 클릭 시 호출 함수
@@ -33,7 +38,7 @@ public class InputManager : MonoBehaviour
         if (GetSelected(out LinkedObject link) is false)
             return;
 
-        link.StartHold();
+        link.CreateLine();
         firstLinkedObj = link;
     }
 
@@ -44,11 +49,12 @@ public class InputManager : MonoBehaviour
     {
         if (GetSelected(out LinkedObject link) is true)
         {
-            firstLinkedObj.EndHold(link);
+            firstLinkedObj.ConnectLine(link);
         }
         else
         {
-            firstLinkedObj.EndHold();
+            firstLinkedObj.DeleteLine();
+            firstLinkedObj.Reset();
         }
 
         firstLinkedObj = null;

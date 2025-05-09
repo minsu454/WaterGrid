@@ -15,16 +15,16 @@ public class Line : MonoBehaviour, IObjectPoolable<Line>
     /// </summary>
     public void Link(Transform startTr)
     {
-        lineRenderer.SetPosition(0, startTr.localPosition);
+        lineRenderer.SetPosition(0, startTr.position);
         PointTr.Add(startTr);
     }
 
     /// <summary>
     /// 업데이트 함수
     /// </summary>
-    public void OnUpdate(Transform endTr)
+    public void OnUpdate(Vector2 pos)
     {
-        lineRenderer.SetPosition(1, endTr.position);
+        lineRenderer.SetPosition(1, pos);
     }
 
     /// <summary>
@@ -55,7 +55,6 @@ public class Line : MonoBehaviour, IObjectPoolable<Line>
     public void ResetObject()
     {
         PointTr.Clear();
-        lineRenderer.positionCount = 0;
     }
 
     private void OnDisable()
