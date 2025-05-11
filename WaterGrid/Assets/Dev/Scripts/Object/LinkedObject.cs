@@ -14,6 +14,10 @@ public abstract class LinkedObject : MonoBehaviour
         get { return myType; }
     }
     [SerializeField] private int myCost;                        //내 비용
+    public int MyCost
+    {
+        get { return myCost; }
+    }
 
     [Header("OtherObject")]
     [SerializeField] private LinkedObjectType connectType;      //연결 가능한 타입
@@ -22,17 +26,36 @@ public abstract class LinkedObject : MonoBehaviour
         get { return connectType; }
     }
 
-    private int curConnectCost = 0;                             //현재 연결 비용
+    protected int curConnectCost = 0;                           //현재 연결 비용
+    public int CurConnectCost
+    {
+        get { return curConnectCost; }
+    }
+
     [SerializeField] private int maxConnectCost;                //최대 연결 비용
+    public int MaxConnectCost
+    {
+        get { return maxConnectCost; }
+    }
 
     public event Action<int, Vector2> lineUpdateEvent;          //라인위치 업데이트 이벤트
 
     [Header("Text")]
-    [SerializeField] private bool isNeedText;                   //텍스트 필요한지 확인 값
-    [SerializeField] private TextMeshPro costText;              //코스트 텍스트
+    [SerializeField] protected bool isNeedText;                 //텍스트 필요한지 확인 값
+    [SerializeField] protected TextMeshPro costText;            //코스트 텍스트
 
     private Line tempLine;                                                                      //임시 라인
     private Dictionary<LinkedObject, Line> _lineDict = new Dictionary<LinkedObject, Line>();    //연결된 라인 
+
+    private void Awake()
+    {
+        Initialized();
+    }
+
+    public void Initialized()
+    {
+        SetText();
+    }
 
     public void Reset()
     {
@@ -68,7 +91,6 @@ public abstract class LinkedObject : MonoBehaviour
             AddLine(linkedObject, tempLine);
 
             lineUpdateEvent?.Invoke(1, linkedObject.transform.position);
-            OnConnectLine();
         }
         else
         {
@@ -92,6 +114,7 @@ public abstract class LinkedObject : MonoBehaviour
     private void AddLine(LinkedObject linkObj, Line line)
     {
         _lineDict.Add(linkObj, line);
+        OnConnectLine(linkObj.myCost);
     }
 
     /// <summary>
@@ -105,10 +128,15 @@ public abstract class LinkedObject : MonoBehaviour
     /// <summary>
     /// 연결 시 호출 이벤트 함수
     /// </summary>
-    public abstract void OnConnectLine();
+    public abstract void OnConnectLine(int cost);
 
     /// <summary>
     /// 연결 해제 시 호출 이벤트 함수
     /// </summary>
-    public abstract void OnUnConnectLine();
+    public abstract void OnUnConnectLine(int cost);
+
+    /// <summary>
+    /// 텍스트 설정 함수
+    /// </summary>
+    public abstract void SetText();
 }

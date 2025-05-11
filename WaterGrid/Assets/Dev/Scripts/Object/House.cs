@@ -4,13 +4,21 @@ using UnityEngine;
 
 public class House : LinkedObject
 {
-    public override void OnConnectLine()
+    public override void OnConnectLine(int cost)
+    {
+        SetText();
+    }
+
+    public override void OnUnConnectLine(int cost)
     {
         
     }
 
-    public override void OnUnConnectLine()
+    public override void SetText()
     {
-        
+        if (isNeedText is false)
+            return;
+
+        costText.text = $"{MyCost}";
     }
 }

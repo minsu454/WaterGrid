@@ -5,13 +5,22 @@ using UnityEngine;
 
 public class Pump : LinkedObject
 {
-    public override void OnConnectLine()
+    public override void OnConnectLine(int cost)
     {
-        
+        curConnectCost += cost;
+        SetText();
     }
 
-    public override void OnUnConnectLine()
+    public override void OnUnConnectLine(int cost)
     {
-        
+
+    }
+
+    public override void SetText()
+    {
+        if (isNeedText is false)
+            return;
+
+        costText.text = $"{CurConnectCost} / {MaxConnectCost}";
     }
 }
