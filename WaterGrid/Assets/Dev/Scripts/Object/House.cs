@@ -9,17 +9,17 @@ public class House : NodeObject
         return true;
     }
 
-    public override void OnConnectLineParent(NodeObject parent, Line line)
+    public override void OnConnectLineParent(NodeObject parent)
     {
-        SetText();
+        parentNodeObject = parent;
     }
 
-    public override void OnConnectLineChildren(NodeObject children, Line line)
+    public override void OnConnectLineChildren(int childrenCost)
     {
         
     }
 
-    protected override void OnUnConnectLine(int cost)
+    public override void OnUnConnectLine(int cost)
     {
         
     }

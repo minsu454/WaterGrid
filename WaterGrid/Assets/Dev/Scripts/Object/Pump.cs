@@ -9,33 +9,32 @@ public class Pump : NodeObject
     {
         int temp = curConnectCost + linkedObject.MyCost;
 
-        if (curConnectCost > MaxConnectCost)
-            return true;
+        if (temp > MaxConnectCost)
+            return false;
 
-        return false;
+        return true;
     }
 
-    public override void OnConnectLineParent(NodeObject parent, Line line)
+    public override void OnConnectLineParent(NodeObject parent)
     {
-        int temp = curConnectCost + parent.MyCost;
+        curConnectCost = curConnectCost + parent.MyCost;
+        parentNodeObject = parent;
 
-        if (curConnectCost > MaxConnectCost)
-            return;
-
-        curConnectCost = temp;
-
-        //AddLine(linkObj, line);
         SetText();
     }
 
-    public override void OnConnectLineChildren(NodeObject children, Line line)
+    public override void OnConnectLineChildren(int childrenCost)
     {
+        curConnectCost = curConnectCost + childrenCost;
 
+        SetText();
     }
 
-    protected override void OnUnConnectLine(int cost)
+    public override void OnUnConnectLine(int cost)
     {
+        curConnectCost = curConnectCost - cost;
 
+        SetText();
     }
 
     protected override void SetText()

@@ -9,25 +9,28 @@ public class Water : NodeObject
         int temp = curConnectCost + linkedObject.MyCost;
 
         if (curConnectCost > MaxConnectCost)
-            return true;
+            return false;
 
-        return false;
+        return true;
     }
 
-    public override void OnConnectLineParent(NodeObject parent, Line line)
+    public override void OnConnectLineParent(NodeObject parent)
     {
-        curConnectCost += parent.MyCost;
+        
+    }
+
+    public override void OnConnectLineChildren(int childrenCost)
+    {
+        curConnectCost = curConnectCost + childrenCost;
+
         SetText();
     }
 
-    public override void OnConnectLineChildren(NodeObject children, Line line)
+    public override void OnUnConnectLine(int cost)
     {
+        curConnectCost = curConnectCost - cost;
 
-    }
-
-    protected override void OnUnConnectLine(int cost)
-    {
-
+        SetText();
     }
 
     protected override void SetText()

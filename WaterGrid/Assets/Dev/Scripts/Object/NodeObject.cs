@@ -26,6 +26,12 @@ public abstract class NodeObject : MonoBehaviour
         get { return isConnectTopObject; }
     }
 
+    protected NodeObject parentNodeObject = null;               //부모 객체 오브젝트
+    public NodeObject ParentNodeObject
+    {
+        get { return parentNodeObject; }
+    }
+
     [Header("OtherObject")]
     [SerializeField] private NodeObjectType connectType;      //연결 가능한 타입
     public NodeObjectType ConnectType
@@ -72,17 +78,17 @@ public abstract class NodeObject : MonoBehaviour
     /// <summary>
     /// 연결 시 호출 이벤트 함수
     /// </summary>
-    public abstract void OnConnectLineParent(NodeObject parent, Line line);
+    public abstract void OnConnectLineParent(NodeObject parent);
 
     /// <summary>
     /// 연결 시 호출 이벤트 함수
     /// </summary>
-    public abstract void OnConnectLineChildren(NodeObject children, Line line);
+    public abstract void OnConnectLineChildren(int childrenCost);
 
     /// <summary>
     /// 연결 해제 시 호출 이벤트 함수
     /// </summary>
-    protected abstract void OnUnConnectLine(int cost);
+    public abstract void OnUnConnectLine(int cost);
 
     /// <summary>
     /// 텍스트 설정 함수

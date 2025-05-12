@@ -1,9 +1,6 @@
 using Common.ListEx;
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public sealed class NodeManager
@@ -44,28 +41,50 @@ public sealed class NodeManager
     /// </summary>
     public void TryAdd(NodeObject node)
     {
-        if (tempNodeObject == node)
+        NodeObject parent = tempNodeObject;
+        NodeObject children = node;
+
+        if (parent == children || parent.CanConnect(children) is false)
         {
             CancelLine();
             return;
         }
 
-        NodeObject parent = tempNodeObject;
-        NodeObject children = node;
-        if (parent.Type > children.Type)
+        if (parent.Type < children.Type)
         {
             parent = node;
             children = tempNodeObject;
         }
 
-        if (parent.CanConnect(children) is false)
+        if (Contains(parent, children))
         {
             CancelLine();
             return;
         }
 
-        lineUpdateEvent?.Invoke(1, node.transform.position);
+        HaveParentInChildren(children);
+
+        lineUpdateEvent?.Invoke(0, parent.transform.position);
+        lineUpdateEvent?.Invoke(1, children.transform.position);
         Add(parent, children, tempLine);
+
+        parent.OnConnectLineChildren(children.MyCost);
+        children.OnConnectLineParent(parent);
+
+        lineUpdateEvent -= tempLine.OnUpdate;
+        tempLine = null;
+        tempNodeObject = null;
+    }
+
+    /// <summary>
+    /// 이미 부모노드에 연결되어 있었을 경우 함수
+    /// </summary>
+    private void HaveParentInChildren(NodeObject children)
+    {
+        if (children.ParentNodeObject == null)
+            return;
+
+        Remove(children.ParentNodeObject, children);
     }
 
     /// <summary>
@@ -79,16 +98,57 @@ public sealed class NodeManager
             return;
         }
 
-        if (tupleList.TryGetTuple(children, out (NodeObject, Line) tuple) is false)
+        if (tupleList.TryGetTuple(children, out (NodeObject key, Line value) tuple) is false)
         {
             Debug.LogError($"Is not found tupleList Key : (NodeObject, Line)");
             return;
         }
 
+        parent.OnUnConnectLine(children.MyCost);
+        tuple.value.Unlink();
         tupleList.Remove(tuple);
 
         if (tupleList.Count == 0)
             _nodeDict.Remove(parent);
+    }
+
+    /// <summary>
+    /// 노드가 포함되어 있는지 체크 함수
+    /// </summary>
+    private bool Contains(NodeObject parent, NodeObject children)
+    {
+        if (_nodeDict.TryGetValue(parent, out List<(NodeObject key, Line value)> tupleList) is false)
+        {
+            return false;
+        }
+
+        if (tupleList.ContainsTuple(children) is false)
+        {
+            return false;
+        }
+
+        return true;
+    }
+
+    /// <summary>
+    /// 라인이 포함되어 있는지 체크 후 반환 함수
+    /// </summary>
+    private bool TryGetLine(NodeObject parent, NodeObject children, out Line line)
+    {
+        line = default;
+
+        if (_nodeDict.TryGetValue(parent, out List<(NodeObject key, Line value)> tupleList) is false)
+        {
+            return false;
+        }
+
+        if (tupleList.TryGetTuple(children, out (NodeObject key, Line value) result) is false)
+        {
+            return false;
+        }
+
+        line = result.value;
+        return true;
     }
 
     /// <summary>
@@ -118,9 +178,10 @@ public sealed class NodeManager
         if (tempLine == null)
             return;
 
-        lineUpdateEvent -= tempLine.OnUpdate;
         tempLine.Unlink();
+        lineUpdateEvent -= tempLine.OnUpdate;
         tempLine = null;
+        tempNodeObject = null;
     }
 
     public void DeleteLine()
