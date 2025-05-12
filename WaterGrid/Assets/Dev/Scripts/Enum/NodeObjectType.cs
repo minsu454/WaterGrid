@@ -7,7 +7,7 @@ using System;
 public enum NodeObjectType
 {
     None = 0,
-    House = 1 << 0,
-    Water = 1 << 1,
-    Pump = 1 << 2,
+    Water = 1 << 0,
+    Pump = 1 << 1,
+    House = 1 << 2,
 }

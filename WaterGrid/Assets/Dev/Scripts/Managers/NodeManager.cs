@@ -2,6 +2,7 @@ using Common.ListEx;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using static Unity.VisualScripting.Metadata;
 
 public sealed class NodeManager
 {
@@ -50,7 +51,7 @@ public sealed class NodeManager
             return;
         }
 
-        if (parent.Type < children.Type)
+        if (parent.Type > children.Type)
         {
             parent = node;
             children = tempNodeObject;
@@ -64,16 +65,7 @@ public sealed class NodeManager
 
         HaveParentInChildren(children);
 
-        lineUpdateEvent?.Invoke(0, parent.transform.position);
-        lineUpdateEvent?.Invoke(1, children.transform.position);
-        Add(parent, children, tempLine);
-
-        parent.OnConnectLineChildren(children.MyCost);
-        children.OnConnectLineParent(parent);
-
-        lineUpdateEvent -= tempLine.OnUpdate;
-        tempLine = null;
-        tempNodeObject = null;
+        ConnectLine(parent, children);
     }
 
     /// <summary>
@@ -165,9 +157,18 @@ public sealed class NodeManager
         tempNodeObject = firstObj;
     }
 
-    public void ConnectLine()
+    public void ConnectLine(NodeObject parent, NodeObject children)
     {
+        lineUpdateEvent?.Invoke(0, parent.transform.position);
+        lineUpdateEvent?.Invoke(1, children.transform.position);
+        Add(parent, children, tempLine);
 
+        parent.OnConnectLineChildren(children.MyCost);
+        children.OnConnectLineParent(parent);
+
+        lineUpdateEvent -= tempLine.OnUpdate;
+        tempLine = null;
+        tempNodeObject = null;
     }
 
     /// <summary>

@@ -47,10 +47,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6b380df06a7106a4f8e10605b3dc890e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  myType: 1
+  myType: 4
   myCost: 1
   isTopObject: 0
-  connectType: 4
+  connectType: 2
   maxConnectCost: 1
   isNeedText: 1
   costText: {fileID: 6407711578768740067}
