@@ -5,7 +5,6 @@ using UnityEngine.InputSystem;
 public sealed class InputManager : MonoBehaviour
 {
     [SerializeField] private InputType inputType;       //인풋 타입
-    private LinkedObject firstLinkedObj;
 
     public static Vector2 MousePoint
     {
@@ -32,11 +31,10 @@ public sealed class InputManager : MonoBehaviour
     /// </summary>
     public void Performed()
     {
-        if (GetSelected(out LinkedObject link) is false)
+        if (GetSelected(out NodeObject node) is false)
             return;
 
-        link.CreateLine();
-        firstLinkedObj = link;
+        Managers.Node.CreateLine(node);
     }
 
     /// <summary>
@@ -44,33 +42,27 @@ public sealed class InputManager : MonoBehaviour
     /// </summary>
     public void Canceled()
     {
-        if (firstLinkedObj == null)
-            return;
-
-        if (GetSelected(out LinkedObject link) is true)
+        if (GetSelected(out NodeObject node) is true)
         {
-            firstLinkedObj.ConnectLine(link);
+            Managers.Node.TryAdd(node);
         }
         else
         {
-            firstLinkedObj.DeleteLine();
-            firstLinkedObj.Reset();
+            Managers.Node.CancelLine();
         }
-
-        firstLinkedObj = null;
     }
 
     /// <summary>
     /// 레이쏴서 블록에 맞은 것을 저장해주는 함수
     /// </summary>
-    private bool GetSelected(out LinkedObject link)
+    private bool GetSelected(out NodeObject node)
     {
-        link = null;
+        node = null;
 
         if (IsMouseHit(out RaycastHit2D hit) is false)
             return false;
 
-        if (hit.collider.TryGetComponent(out link) is false)
+        if (hit.collider.TryGetComponent(out node) is false)
             return false;
 
         return true;

@@ -9,9 +9,11 @@ public sealed class Managers : MonoBehaviour
 
     public static UIManager UI { get { return instance.uiManager; } }
     public static SoundManager Sound { get { return instance.soundManager; } }
+    public static NodeManager Node { get { return instance.nodeManager; } }
 
     private UIManager uiManager;
     private SoundManager soundManager;
+    private NodeManager nodeManager = new NodeManager();
 
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
     static void Init()
@@ -25,6 +27,11 @@ public sealed class Managers : MonoBehaviour
         instance.soundManager = CreateManager<SoundManager>(go.transform);
 
         SceneJobLoader.Init();
+    }
+
+    private void Update()
+    {
+        nodeManager.OnUpdate();
     }
 
     /// <summary>

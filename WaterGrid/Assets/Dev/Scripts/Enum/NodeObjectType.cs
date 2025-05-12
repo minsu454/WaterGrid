@@ -4,7 +4,7 @@ using System;
 /// 연결 오브젝트 타입
 /// </summary>
 [Flags]
-public enum LinkedObjectType
+public enum NodeObjectType
 {
     None = 0,
     House = 1 << 0,
