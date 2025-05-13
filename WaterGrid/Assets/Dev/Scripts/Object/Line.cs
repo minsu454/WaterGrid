@@ -2,20 +2,40 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Line : MonoBehaviour, IObjectPoolable<Line>
+
+[RequireComponent(typeof(EdgeCollider2D))]
+[RequireComponent(typeof(LineRenderer))]
+public class Line : MonoBehaviour, IObjectPoolable<Line>, Interactionable
 {
     [SerializeField] private LineRenderer lineRenderer;             //라인 렌더러
-    private List<Transform> PointTr = new List<Transform>();        //연결되어 있는 오브젝트 Tr
+    [SerializeField] private EdgeCollider2D edgeCollider;           //라인 렌더러
+
+    protected NodeObject parentNodeObject = null;                   //부모 객체 오브젝트
+    public NodeObject ParentNodeObject
+    {
+        get { return parentNodeObject; }
+    }
 
     public event Action<Line> ReturnEvent;
 
     /// <summary>
-    /// 라인 연결 함수
+    /// 라인 임시 연결 함수
     /// </summary>
-    public void Link(Transform startTr)
+    public void TempConnect(Transform startTr)
     {
         SetLinePosition(0, startTr.position);
-        PointTr.Add(startTr);
+    }
+
+    /// <summary>
+    /// 라인 연결 함수
+    /// </summary>
+    public void Connect(NodeObject parent, NodeObject children)
+    {
+        parentNodeObject = parent;
+        OnUpdate(0, parent.transform.position);
+        OnUpdate(1, children.transform.position);
+
+        edgeCollider.SetPoints(new List<Vector2>() { parent.transform.position, children.transform.position });
     }
 
     /// <summary>
@@ -29,44 +49,31 @@ public class Line : MonoBehaviour, IObjectPoolable<Line>
     /// <summary>
     /// 라인 위치 세팅 함수
     /// </summary>
-    public void SetLinePosition(int idx, Vector3 pos)
+    private void SetLinePosition(int idx, Vector3 pos)
     {
         lineRenderer.SetPosition(idx, pos);
     }
 
     /// <summary>
-    /// 라인 세팅 함수
-    /// </summary>
-    private void Hold()
-    {
-        if (PointTr.Count == 0)
-            return;
-
-        for (int i = 0; i < PointTr.Count; i++)
-        {
-            lineRenderer.SetPosition(i, PointTr[i].position);
-        }
-    }
-
-    /// <summary>
     /// 라인 연결 해제 함수
     /// </summary>
-    public void Unlink()
+    public void Unconnect()
     {
         gameObject.SetActive(false);
     }
 
-    /// <summary>
-    /// 리셋 함수
-    /// </summary>
-    public void ResetObject()
-    {
-        PointTr.Clear();
-    }
-
     private void OnDisable()
     {
-        ResetObject();
         ReturnEvent.Invoke(this);
+    }
+
+    public void Performed()
+    {
+        Debug.Log("Preformed");
+    }
+
+    public void Canceled()
+    {
+        Debug.Log("Canceled");
     }
 }

@@ -97,7 +97,7 @@ public sealed class NodeManager
         }
 
         parent.OnUnConnectLine(children.MyCost);
-        tuple.value.Unlink();
+        tuple.value.Unconnect();
         tupleList.Remove(tuple);
 
         if (tupleList.Count == 0)
@@ -150,17 +150,19 @@ public sealed class NodeManager
     {
         tempLine = GameManager.instance.lineObjectPool.GetObject();
 
-        tempLine.Link(firstObj.transform);
+        tempLine.TempConnect(firstObj.transform);
         lineUpdateEvent += tempLine.OnUpdate;
         tempLine.gameObject.SetActive(true);
 
         tempNodeObject = firstObj;
     }
 
+    /// <summary>
+    /// 라인 연결 함수
+    /// </summary>
     public void ConnectLine(NodeObject parent, NodeObject children)
     {
-        lineUpdateEvent?.Invoke(0, parent.transform.position);
-        lineUpdateEvent?.Invoke(1, children.transform.position);
+        tempLine.Connect(parent, children);
         Add(parent, children, tempLine);
 
         parent.OnConnectLineChildren(children.MyCost);
@@ -179,7 +181,7 @@ public sealed class NodeManager
         if (tempLine == null)
             return;
 
-        tempLine.Unlink();
+        tempLine.Unconnect();
         lineUpdateEvent -= tempLine.OnUpdate;
         tempLine = null;
         tempNodeObject = null;

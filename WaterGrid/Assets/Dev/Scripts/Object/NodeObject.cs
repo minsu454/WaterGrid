@@ -5,7 +5,7 @@ using UnityEngine;
 
 [RequireComponent(typeof(SpriteRenderer))]
 [RequireComponent(typeof(CircleCollider2D))]
-public abstract class NodeObject : MonoBehaviour
+public abstract class NodeObject : MonoBehaviour, Interactionable
 {
     [Header("MyObject")]
     [SerializeField] private NodeObjectType myType;             //내 타입
@@ -94,4 +94,14 @@ public abstract class NodeObject : MonoBehaviour
     /// 텍스트 설정 함수
     /// </summary>
     protected abstract void SetText();
+
+    public void Performed()
+    {
+        Managers.Node.CreateLine(this);
+    }
+
+    public void Canceled()
+    {
+        Managers.Node.TryAdd(this);
+    }
 }

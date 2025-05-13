@@ -8,7 +8,7 @@ public sealed class InputManager : MonoBehaviour
 
     public static Vector2 MousePoint
     {
-        get { return Camera.main.ScreenToWorldPoint(Input.mousePosition); }
+        get { return Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue()); }
     }
 
     /// <summary>
@@ -31,10 +31,10 @@ public sealed class InputManager : MonoBehaviour
     /// </summary>
     public void Performed()
     {
-        if (GetSelected(out NodeObject node) is false)
+        if (GetSelected(out Interactionable interaction) is false)
             return;
 
-        Managers.Node.CreateLine(node);
+        interaction.Performed();
     }
 
     /// <summary>
@@ -42,9 +42,9 @@ public sealed class InputManager : MonoBehaviour
     /// </summary>
     public void Canceled()
     {
-        if (GetSelected(out NodeObject node) is true)
+        if (GetSelected(out Interactionable interaction) is true)
         {
-            Managers.Node.TryAdd(node);
+            interaction.Canceled();
         }
         else
         {
@@ -55,7 +55,7 @@ public sealed class InputManager : MonoBehaviour
     /// <summary>
     /// 레이쏴서 블록에 맞은 것을 저장해주는 함수
     /// </summary>
-    private bool GetSelected(out NodeObject node)
+    private bool GetSelected(out Interactionable node)
     {
         node = null;
 
