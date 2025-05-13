@@ -141,7 +141,7 @@ LineRenderer:
       m_ColorSpace: 0
       m_NumColorKeys: 2
       m_NumAlphaKeys: 2
-    numCornerVertices: 0
+    numCornerVertices: 30
     numCapVertices: 34
     alignment: 0
     textureMode: 0

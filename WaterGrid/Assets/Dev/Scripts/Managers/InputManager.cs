@@ -6,9 +6,19 @@ public sealed class InputManager : MonoBehaviour
 {
     [SerializeField] private InputType inputType;       //인풋 타입
 
-    public static Vector2 MousePoint
+    public static Vector2 inputWorldPoint
     {
         get { return Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue()); }
+    }
+
+    private bool isPress;
+
+    private void Update()
+    {
+        if (Managers.Node.TempInteractionable == null || isPress is false)
+            return;
+
+        Managers.Node.TempInteractionable.Pressed();
     }
 
     /// <summary>
@@ -19,9 +29,11 @@ public sealed class InputManager : MonoBehaviour
         if (context.phase == InputActionPhase.Performed && EventSystem.current.IsPointerOverGameObject() is false)
         {
             Performed();
+            isPress = true;
         }
         else if (context.phase == InputActionPhase.Canceled)
         {
+            isPress = false;
             Canceled();
         }
     }
@@ -31,7 +43,7 @@ public sealed class InputManager : MonoBehaviour
     /// </summary>
     public void Performed()
     {
-        if (GetSelected(out Interactionable interaction) is false)
+        if (Managers.Node.GetSelected(out Interactionable interaction) is false)
             return;
 
         interaction.Performed();
@@ -42,7 +54,7 @@ public sealed class InputManager : MonoBehaviour
     /// </summary>
     public void Canceled()
     {
-        if (GetSelected(out Interactionable interaction) is true)
+        if (Managers.Node.GetSelected(out Interactionable interaction) is true)
         {
             interaction.Canceled();
         }
@@ -50,35 +62,5 @@ public sealed class InputManager : MonoBehaviour
         {
             Managers.Node.CancelLine();
         }
-    }
-
-    /// <summary>
-    /// 레이쏴서 블록에 맞은 것을 저장해주는 함수
-    /// </summary>
-    private bool GetSelected(out Interactionable node)
-    {
-        node = null;
-
-        if (IsMouseHit(out RaycastHit2D hit) is false)
-            return false;
-
-        if (hit.collider.TryGetComponent(out node) is false)
-            return false;
-
-        return true;
-    }
-
-    /// <summary>
-    /// 마우스 클릭방향으로 레이를 쏴서 spawnpoint가 있는지 체크하는 함수 
-    /// </summary>
-    public bool IsMouseHit(out RaycastHit2D hit)
-    {
-        Vector2 vec = Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue());
-        hit = Physics2D.Linecast(vec, vec * 5);
-
-        if (!hit)
-            return false;
-
-        return true;
     }
 }

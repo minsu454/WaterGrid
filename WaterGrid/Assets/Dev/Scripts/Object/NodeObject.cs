@@ -88,7 +88,12 @@ public abstract class NodeObject : MonoBehaviour, Interactionable
     /// <summary>
     /// 연결 해제 시 호출 이벤트 함수
     /// </summary>
-    public abstract void OnUnConnectLine(int cost);
+    public abstract void OnUnConnectLineParent(int cost);
+
+    /// <summary>
+    /// 연결 해제 시 호출 이벤트 함수
+    /// </summary>
+    public abstract void OnUnConnectLineChildren(int cost);
 
     /// <summary>
     /// 텍스트 설정 함수
@@ -98,6 +103,11 @@ public abstract class NodeObject : MonoBehaviour, Interactionable
     public void Performed()
     {
         Managers.Node.CreateLine(this);
+    }
+
+    public void Pressed()
+    {
+
     }
 
     public void Canceled()

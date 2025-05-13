@@ -26,11 +26,16 @@ public class Water : NodeObject
         SetText();
     }
 
-    public override void OnUnConnectLine(int cost)
+    public override void OnUnConnectLineParent(int cost)
     {
         curConnectCost = curConnectCost - cost;
 
         SetText();
+    }
+
+    public override void OnUnConnectLineChildren(int cost)
+    {
+        
     }
 
     protected override void SetText()

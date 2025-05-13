@@ -7,14 +7,22 @@ using UnityEngine;
 [RequireComponent(typeof(LineRenderer))]
 public class Line : MonoBehaviour, IObjectPoolable<Line>, Interactionable
 {
-    [SerializeField] private LineRenderer lineRenderer;             //라인 렌더러
-    [SerializeField] private EdgeCollider2D edgeCollider;           //라인 렌더러
+    [SerializeField] private LineRenderer lineRenderer;                     //라인 렌더러
+    [SerializeField] private EdgeCollider2D edgeCollider;                   //라인 렌더러
 
-    protected NodeObject parentNodeObject = null;                   //부모 객체 오브젝트
+    protected NodeObject parentNodeObject = null;                           //부모 객체 오브젝트
     public NodeObject ParentNodeObject
     {
         get { return parentNodeObject; }
     }
+
+    protected NodeObject childrenNodeObject = null;                         //자식 객체 오브젝트
+    public NodeObject ChildrenNodeObject
+    {
+        get { return childrenNodeObject; }
+    }
+
+    private readonly List<Vector2> setPointList = new List<Vector2>(2);     //부모자식 위치 리스트
 
     public event Action<Line> ReturnEvent;
 
@@ -23,6 +31,7 @@ public class Line : MonoBehaviour, IObjectPoolable<Line>, Interactionable
     /// </summary>
     public void TempConnect(Transform startTr)
     {
+        lineRenderer.positionCount = 2;
         SetLinePosition(0, startTr.position);
     }
 
@@ -32,10 +41,15 @@ public class Line : MonoBehaviour, IObjectPoolable<Line>, Interactionable
     public void Connect(NodeObject parent, NodeObject children)
     {
         parentNodeObject = parent;
+        childrenNodeObject = children;
+
         OnUpdate(0, parent.transform.position);
         OnUpdate(1, children.transform.position);
 
-        edgeCollider.SetPoints(new List<Vector2>() { parent.transform.position, children.transform.position });
+        setPointList.Add(parent.transform.position);
+        setPointList.Add(children.transform.position);
+
+        edgeCollider.SetPoints(setPointList);
     }
 
     /// <summary>
@@ -69,11 +83,34 @@ public class Line : MonoBehaviour, IObjectPoolable<Line>, Interactionable
 
     public void Performed()
     {
-        Debug.Log("Preformed");
+        lineRenderer.positionCount = 3;
+        OnUpdate(2, lineRenderer.GetPosition(1));
+
+        Managers.Node.SetLine(this);
+    }
+
+    public void Pressed()
+    {
+        if (Managers.Node.GetSelected(out Interactionable interactionable) is false)
+            return;
+
+        if (interactionable.Equals(parentNodeObject) is true)
+        {
+            Managers.Node.ChangeTempLine(parentNodeObject, childrenNodeObject, childrenNodeObject);
+        }
+        else if (interactionable.Equals(childrenNodeObject) is true)
+        {
+            Managers.Node.ChangeTempLine(parentNodeObject, childrenNodeObject, parentNodeObject);
+        }
+        else
+        {
+
+        }
+
     }
 
     public void Canceled()
     {
-        Debug.Log("Canceled");
+        Managers.Node.CancelLine();
     }
 }

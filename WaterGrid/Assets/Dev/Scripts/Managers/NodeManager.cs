@@ -2,6 +2,7 @@ using Common.ListEx;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using static Unity.VisualScripting.Metadata;
 
 public sealed class NodeManager
@@ -9,13 +10,17 @@ public sealed class NodeManager
     private readonly Dictionary<NodeObject, List<(NodeObject key, Line value)>> _nodeDict = new Dictionary<NodeObject, List<(NodeObject key, Line value)>>();
 
     private Line tempLine;                                      //임시 라인
-    private NodeObject tempNodeObject;                          //선택 노드
+    private Interactionable tempInteractionable;                //선택 
+    public Interactionable TempInteractionable
+    {
+        get { return tempInteractionable; }
+    }
 
     public event Action<int, Vector2> lineUpdateEvent;          //라인위치 업데이트 이벤트
 
     public void OnUpdate()
     {
-        lineUpdateEvent?.Invoke(1, InputManager.MousePoint);
+        lineUpdateEvent?.Invoke(1, InputManager.inputWorldPoint);
     }
 
     /// <summary>
@@ -42,7 +47,13 @@ public sealed class NodeManager
     /// </summary>
     public void TryAdd(NodeObject node)
     {
-        NodeObject parent = tempNodeObject;
+        if (tempLine == null || (tempInteractionable is NodeObject) is false)
+        {
+            CancelLine();
+            return;
+        }
+
+        NodeObject parent = (NodeObject)tempInteractionable;
         NodeObject children = node;
 
         if (parent == children || parent.CanConnect(children) is false)
@@ -53,8 +64,8 @@ public sealed class NodeManager
 
         if (parent.Type > children.Type)
         {
+            children = parent;
             parent = node;
-            children = tempNodeObject;
         }
 
         if (Contains(parent, children))
@@ -76,32 +87,35 @@ public sealed class NodeManager
         if (children.ParentNodeObject == null)
             return;
 
-        Remove(children.ParentNodeObject, children);
+        Line line = Remove(children.ParentNodeObject, children);
+        line.Unconnect();
     }
 
     /// <summary>
     /// 노드 삭제 함수
     /// </summary>
-    private void Remove(NodeObject parent, NodeObject children)
+    private Line Remove(NodeObject parent, NodeObject children)
     {
         if (_nodeDict.TryGetValue(parent, out List<(NodeObject key, Line value)> tupleList) is false)
         {
             Debug.LogError($"Is not found Dictionary Key : _nodeDict");
-            return;
+            return default;
         }
 
-        if (tupleList.TryGetTuple(children, out (NodeObject key, Line value) tuple) is false)
+        if (tupleList.TryGetTupleByKey(children, out (NodeObject key, Line value) tuple) is false)
         {
             Debug.LogError($"Is not found tupleList Key : (NodeObject, Line)");
-            return;
+            return default;
         }
 
-        parent.OnUnConnectLine(children.MyCost);
-        tuple.value.Unconnect();
+        parent.OnUnConnectLineParent(children.MyCost);
+        children.OnUnConnectLineChildren(parent.MyCost);
         tupleList.Remove(tuple);
 
         if (tupleList.Count == 0)
             _nodeDict.Remove(parent);
+
+        return tuple.value;
     }
 
     /// <summary>
@@ -134,7 +148,7 @@ public sealed class NodeManager
             return false;
         }
 
-        if (tupleList.TryGetTuple(children, out (NodeObject key, Line value) result) is false)
+        if (tupleList.TryGetTupleByKey(children, out (NodeObject key, Line value) result) is false)
         {
             return false;
         }
@@ -154,7 +168,15 @@ public sealed class NodeManager
         lineUpdateEvent += tempLine.OnUpdate;
         tempLine.gameObject.SetActive(true);
 
-        tempNodeObject = firstObj;
+        tempInteractionable = firstObj;
+    }
+
+    public void SetLine(Line line)
+    {
+        tempLine = line;
+        lineUpdateEvent += tempLine.OnUpdate;
+
+        tempInteractionable = line;
     }
 
     /// <summary>
@@ -170,7 +192,16 @@ public sealed class NodeManager
 
         lineUpdateEvent -= tempLine.OnUpdate;
         tempLine = null;
-        tempNodeObject = null;
+        tempInteractionable = null;
+    }
+
+    /// <summary>
+    /// 라인 연결 해제 함수
+    /// </summary>
+    public void UnConnectLine(NodeObject parent, NodeObject children)
+    {
+        Remove(parent, children);
+        CancelLine();
     }
 
     /// <summary>
@@ -184,11 +215,46 @@ public sealed class NodeManager
         tempLine.Unconnect();
         lineUpdateEvent -= tempLine.OnUpdate;
         tempLine = null;
-        tempNodeObject = null;
+        tempInteractionable = null;
     }
 
-    public void DeleteLine()
+    /// <summary>
+    /// 임시 선으로 변환 함수
+    /// </summary>
+    public void ChangeTempLine(NodeObject curParent, NodeObject children, NodeObject tempParent)
     {
+        Remove(curParent, children);
+        tempInteractionable = tempParent;
+        tempLine.TempConnect(tempParent.transform);
+    }
 
+    /// <summary>
+    /// 레이쏴서 블록에 맞은 것을 저장해주는 함수
+    /// </summary>
+    public bool GetSelected(out Interactionable node)
+    {
+        node = null;
+
+        if (IsMouseHit(out RaycastHit2D hit) is false)
+            return false;
+
+        if (hit.collider.TryGetComponent(out node) is false)
+            return false;
+
+        return true;
+    }
+
+    /// <summary>
+    /// 마우스 클릭방향으로 레이를 쏴서 spawnpoint가 있는지 체크하는 함수 
+    /// </summary>
+    private bool IsMouseHit(out RaycastHit2D hit)
+    {
+        Vector2 vec = InputManager.inputWorldPoint;
+        hit = Physics2D.Linecast(vec, vec * 5);
+
+        if (!hit)
+            return false;
+
+        return true;
     }
 }

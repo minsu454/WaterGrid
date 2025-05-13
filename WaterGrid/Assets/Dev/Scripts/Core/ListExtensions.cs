@@ -25,9 +25,9 @@ namespace Common.ListEx
         }
 
         /// <summary>
-        /// 해당 오브젝트가 있는지 확인 후 반환
+        /// 해당 오브젝트가 있는지 키로 확인 후 반환
         /// </summary>
-        public static bool TryGetTuple<TKey, TValue>(this List<(TKey, TValue)> list, TKey target, out (TKey, TValue) result)
+        public static bool TryGetTupleByKey<TKey, TValue>(this List<(TKey, TValue)> list, TKey target, out (TKey, TValue) result)
         {
             foreach (var item in list)
             {
@@ -35,6 +35,27 @@ namespace Common.ListEx
                     throw new Exception("List<(TKey, TValue)> list.Item1 is None.");
 
                 if (item.Item1.Equals(target))
+                {
+                    result = item;
+                    return true;
+                }
+            }
+
+            result = default;
+            return false;
+        }
+
+        /// <summary>
+        /// 해당 오브젝트가 있는지 값으로 확인 후 반환
+        /// </summary>
+        public static bool TryGetTupleByValue<TKey, TValue>(this List<(TKey, TValue)> list, TValue target, out (TKey, TValue) result)
+        {
+            foreach (var item in list)
+            {
+                if (item.Item2 == null)
+                    throw new Exception("List<(TKey, TValue)> list.Item1 is None.");
+
+                if (item.Item2.Equals(target))
                 {
                     result = item;
                     return true;
