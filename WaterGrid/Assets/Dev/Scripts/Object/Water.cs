@@ -8,7 +8,7 @@ public class Water : NodeObject
     {
         int temp = curConnectCost + linkedObject.MyCost;
 
-        if (curConnectCost > MaxConnectCost)
+        if (temp > MaxConnectCost)
             return false;
 
         return true;

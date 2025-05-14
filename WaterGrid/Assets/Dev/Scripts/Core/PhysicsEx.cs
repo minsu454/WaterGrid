@@ -13,6 +13,9 @@ namespace Common.PhysicsEx
             return distance < (radiusA + radiusB);
         }
 
+        /// <summary>
+        /// 원과 점의 충돌 여부를 판단 함수
+        /// </summary>
         public static bool IsPointInCircle(Vector2 circle, float radius, Vector2 point)
         {
             float distance = Vector2.Distance(circle, point);

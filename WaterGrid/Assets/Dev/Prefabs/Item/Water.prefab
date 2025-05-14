@@ -135,7 +135,7 @@ MonoBehaviour:
   myType: 1
   myCost: 0
   isTopObject: 1
-  maxConnectCost: 5
+  maxConnectCost: 1
   AreaTr: {fileID: 6129797028806009823}
   radius: 20
   connectType: 2
