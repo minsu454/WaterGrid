@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
@@ -32,13 +30,6 @@ public abstract class NodeObject : MonoBehaviour, Interactionable
         get { return parentNodeObject; }
     }
 
-    [Header("OtherObject")]
-    [SerializeField] private NodeObjectType connectType;      //연결 가능한 타입
-    public NodeObjectType ConnectType
-    {
-        get { return connectType; }
-    }
-
     protected int curConnectCost = 0;                           //현재 연결 비용
     public int CurConnectCost
     {
@@ -51,8 +42,22 @@ public abstract class NodeObject : MonoBehaviour, Interactionable
         get { return maxConnectCost; }
     }
 
+    [SerializeField] private Transform AreaTr;
+
+    [SerializeField] protected int radius;                      //반지름 
+    public int Radius
+    {
+        get { return radius; }
+    }
+
+    [Header("OtherObject")]
+    [SerializeField] private NodeObjectType connectType;        //연결 가능한 타입
+    public NodeObjectType ConnectType
+    {
+        get { return connectType; }
+    }
+
     [Header("Text")]
-    [SerializeField] protected bool isNeedText;                 //텍스트 필요한지 확인 값
     [SerializeField] protected TextMeshPro costText;            //코스트 텍스트
 
     private void Awake()
@@ -62,6 +67,8 @@ public abstract class NodeObject : MonoBehaviour, Interactionable
 
     public void Initialized()
     {
+        AreaTr.localScale = new Vector2(radius, radius);
+
         SetText();
     }
 

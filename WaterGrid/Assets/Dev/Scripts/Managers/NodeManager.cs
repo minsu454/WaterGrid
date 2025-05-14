@@ -1,4 +1,6 @@
 using Common.ListEx;
+using Common.PhysicsEx;
+using Cysharp.Threading.Tasks.Triggers;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -62,13 +64,14 @@ public sealed class NodeManager
             return;
         }
 
-        if (parent.Type > children.Type)
+        if (parent.Type >= children.Type)
         {
             children = parent;
             parent = node;
         }
 
-        if (Contains(parent, children))
+        if (PhysicsEx.IsPointInCircle(parent.transform.position, parent.Radius, children.transform.position) is false
+             || Contains(parent, children))
         {
             CancelLine();
             return;
@@ -133,27 +136,6 @@ public sealed class NodeManager
             return false;
         }
 
-        return true;
-    }
-
-    /// <summary>
-    /// 라인이 포함되어 있는지 체크 후 반환 함수
-    /// </summary>
-    private bool TryGetLine(NodeObject parent, NodeObject children, out Line line)
-    {
-        line = default;
-
-        if (_nodeDict.TryGetValue(parent, out List<(NodeObject key, Line value)> tupleList) is false)
-        {
-            return false;
-        }
-
-        if (tupleList.TryGetTupleByKey(children, out (NodeObject key, Line value) result) is false)
-        {
-            return false;
-        }
-
-        line = result.value;
         return true;
     }
 

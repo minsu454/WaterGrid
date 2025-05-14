@@ -47,9 +47,6 @@ public class Pump : NodeObject
 
     protected override void SetText()
     {
-        if (isNeedText is false)
-            return;
-
         costText.text = $"{CurConnectCost} / {MaxConnectCost}";
     }
 }

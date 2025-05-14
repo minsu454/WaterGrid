@@ -50,9 +50,10 @@ MonoBehaviour:
   myType: 4
   myCost: 1
   isTopObject: 0
-  connectType: 2
   maxConnectCost: 1
-  isNeedText: 1
+  AreaTr: {fileID: 4751056693370902197}
+  radius: 1
+  connectType: 2
   costText: {fileID: 6407711578768740067}
 --- !u!212 &8047102658132792965
 SpriteRenderer:
