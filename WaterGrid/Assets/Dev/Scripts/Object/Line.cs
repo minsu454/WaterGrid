@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using static Unity.VisualScripting.Metadata;
 
 
 [RequireComponent(typeof(EdgeCollider2D))]
@@ -50,6 +51,17 @@ public class Line : MonoBehaviour, IObjectPoolable<Line>, Interactionable
         setPointList.Add(children.transform.position);
 
         edgeCollider.SetPoints(setPointList);
+    }
+
+    /// <summary>
+    /// 라인 잡는 것 취소 함수
+    /// </summary>
+    public void Cancel()
+    {
+        lineRenderer.positionCount = 2;
+
+        OnUpdate(0, parentNodeObject.transform.position);
+        OnUpdate(1, childrenNodeObject.transform.position);
     }
 
     /// <summary>
@@ -111,6 +123,6 @@ public class Line : MonoBehaviour, IObjectPoolable<Line>, Interactionable
 
     public void Canceled()
     {
-        Managers.Node.CancelLine();
+        Managers.Node.DeleteLine();
     }
 }

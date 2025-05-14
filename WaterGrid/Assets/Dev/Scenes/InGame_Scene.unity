@@ -680,6 +680,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6022378329267544225, guid: f066ca108b2c01042bf0ff2cfaa22c93, type: 3}
+      propertyPath: m_Radius
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6855217600177987847, guid: f066ca108b2c01042bf0ff2cfaa22c93, type: 3}
       propertyPath: m_Name
       value: Pump (1)

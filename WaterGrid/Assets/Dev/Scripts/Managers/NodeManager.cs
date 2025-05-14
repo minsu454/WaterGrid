@@ -51,7 +51,7 @@ public sealed class NodeManager
     {
         if (tempLine == null || (tempInteractionable is NodeObject) is false)
         {
-            CancelLine();
+            DeleteLine();
             return;
         }
 
@@ -60,7 +60,7 @@ public sealed class NodeManager
 
         if (parent == children || parent.CanConnect(children) is false)
         {
-            CancelLine();
+            DeleteLine();
             return;
         }
 
@@ -73,7 +73,7 @@ public sealed class NodeManager
         if (PhysicsEx.IsPointInCircle(parent.transform.position, parent.Radius, children.transform.position) is false
              || Contains(parent, children))
         {
-            CancelLine();
+            DeleteLine();
             return;
         }
 
@@ -153,12 +153,26 @@ public sealed class NodeManager
         tempInteractionable = firstObj;
     }
 
+    /// <summary>
+    /// 라인 클릭시 라인 잡고 있는 함수
+    /// </summary>
     public void SetLine(Line line)
     {
         tempLine = line;
         lineUpdateEvent += tempLine.OnUpdate;
 
         tempInteractionable = line;
+    }
+
+    /// <summary>
+    /// 라인 선택 취소 함수
+    /// </summary>
+    public void CancelLine(Line line)
+    {
+        line.Cancel();
+        lineUpdateEvent -= tempLine.OnUpdate;
+        tempLine = null;
+        tempInteractionable = null;
     }
 
     /// <summary>
@@ -183,13 +197,13 @@ public sealed class NodeManager
     public void UnConnectLine(NodeObject parent, NodeObject children)
     {
         Remove(parent, children);
-        CancelLine();
+        DeleteLine();
     }
 
     /// <summary>
     /// 임시 선 삭제 함수
     /// </summary>
-    public void CancelLine()
+    public void DeleteLine()
     {
         if (tempLine == null)
             return;
@@ -211,7 +225,7 @@ public sealed class NodeManager
     }
 
     /// <summary>
-    /// 레이쏴서 블록에 맞은 것을 저장해주는 함수
+    /// 레이쏴서 블록에 맞은 것을 반환해주는 함수
     /// </summary>
     public bool GetSelected(out Interactionable node)
     {

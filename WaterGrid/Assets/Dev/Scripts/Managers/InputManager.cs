@@ -58,9 +58,13 @@ public sealed class InputManager : MonoBehaviour
         {
             interaction.Canceled();
         }
+        else if (Managers.Node.TempInteractionable is Line)
+        {
+            Managers.Node.CancelLine((Line)Managers.Node.TempInteractionable);
+        }
         else
         {
-            Managers.Node.CancelLine();
+            Managers.Node.DeleteLine();
         }
     }
 }
