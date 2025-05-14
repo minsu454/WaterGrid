@@ -91,7 +91,7 @@ public sealed class NodeManager
             return;
 
         Line line = Remove(children.ParentNodeObject, children);
-        line.Unconnect();
+        line.Disconnect();
     }
 
     /// <summary>
@@ -111,8 +111,8 @@ public sealed class NodeManager
             return default;
         }
 
-        parent.OnUnConnectLineParent(children.MyCost);
-        children.OnUnConnectLineChildren(parent.MyCost);
+        parent.OnDisconnectLineParent(children.MyCost);
+        children.OnDisconnectLineChildren(parent.MyCost);
         tupleList.Remove(tuple);
 
         if (tupleList.Count == 0)
@@ -194,7 +194,7 @@ public sealed class NodeManager
     /// <summary>
     /// 라인 연결 해제 함수
     /// </summary>
-    public void UnConnectLine(NodeObject parent, NodeObject children)
+    public void DisconnectLine(NodeObject parent, NodeObject children)
     {
         Remove(parent, children);
         DeleteLine();
@@ -208,7 +208,7 @@ public sealed class NodeManager
         if (tempLine == null)
             return;
 
-        tempLine.Unconnect();
+        tempLine.Disconnect();
         lineUpdateEvent -= tempLine.OnUpdate;
         tempLine = null;
         tempInteractionable = null;

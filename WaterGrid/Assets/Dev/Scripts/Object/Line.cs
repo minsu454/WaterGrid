@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using static Unity.VisualScripting.Metadata;
-
 
 [RequireComponent(typeof(EdgeCollider2D))]
 [RequireComponent(typeof(LineRenderer))]
@@ -83,7 +81,7 @@ public class Line : MonoBehaviour, IObjectPoolable<Line>, Interactionable
     /// <summary>
     /// 라인 연결 해제 함수
     /// </summary>
-    public void Unconnect()
+    public void Disconnect()
     {
         gameObject.SetActive(false);
     }

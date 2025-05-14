@@ -19,12 +19,12 @@ public class House : NodeObject
         
     }
 
-    public override void OnUnConnectLineParent(int cost)
+    public override void OnDisconnectLineParent(int cost)
     {
         
     }
 
-    public override void OnUnConnectLineChildren(int cost)
+    public override void OnDisconnectLineChildren(int cost)
     {
         parentNodeObject = null;
     }

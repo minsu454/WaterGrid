@@ -30,14 +30,14 @@ public class Pump : NodeObject
         SetText();
     }
 
-    public override void OnUnConnectLineParent(int cost)
+    public override void OnDisconnectLineParent(int cost)
     {
         curConnectCost = curConnectCost - cost;
 
         SetText();
     }
 
-    public override void OnUnConnectLineChildren(int cost)
+    public override void OnDisconnectLineChildren(int cost)
     {
         curConnectCost = curConnectCost - cost;
 

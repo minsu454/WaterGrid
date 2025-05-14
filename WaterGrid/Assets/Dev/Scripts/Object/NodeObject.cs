@@ -95,12 +95,12 @@ public abstract class NodeObject : MonoBehaviour, Interactionable
     /// <summary>
     /// 연결 해제 시 호출 이벤트 함수
     /// </summary>
-    public abstract void OnUnConnectLineParent(int cost);
+    public abstract void OnDisconnectLineParent(int cost);
 
     /// <summary>
     /// 연결 해제 시 호출 이벤트 함수
     /// </summary>
-    public abstract void OnUnConnectLineChildren(int cost);
+    public abstract void OnDisconnectLineChildren(int cost);
 
     /// <summary>
     /// 텍스트 설정 함수
