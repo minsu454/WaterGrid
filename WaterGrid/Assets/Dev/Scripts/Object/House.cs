@@ -21,7 +21,6 @@ public class House : NodeObject
                 return;
 
             warningIcon = GameManager.instance.warningIconObjectPool.GetObject();
-
             warningIcon.gameObject.SetActive(true);
             warningIcon.Init(transform);
         }
