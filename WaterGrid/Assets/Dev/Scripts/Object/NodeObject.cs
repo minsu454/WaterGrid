@@ -18,7 +18,7 @@ public abstract class NodeObject : MonoBehaviour, Interactionable
     }
 
     [SerializeField] private bool isTopObject = false;          //최상위 객체인지 확인 값
-    private bool isConnectTopObject = false;                    //최상위 객체와 연결되어 있는지 확인 값
+    [SerializeField] private bool isConnectTopObject = false;   //최상위 객체와 연결되어 있는지 확인 값
     public bool IsConnectTopObject
     {
         get { return isConnectTopObject; }
@@ -68,7 +68,7 @@ public abstract class NodeObject : MonoBehaviour, Interactionable
     public void Initialized()
     {
         AreaTr.localScale = new Vector2(radius, radius);
-
+        isConnectTopObject = isTopObject;
         SetText();
     }
 
@@ -78,6 +78,11 @@ public abstract class NodeObject : MonoBehaviour, Interactionable
     public bool CanConnect(NodeObject linkedObject)
     {
         return linkedObject.ConnectType.HasFlag(myType) && connectType.HasFlag(linkedObject.Type) && IsConnectCost(linkedObject) && linkedObject.IsConnectCost(this);
+    }
+
+    public void SetIsConnectTopObject(bool value)
+    {
+        isConnectTopObject = value;
     }
 
     public abstract bool IsConnectCost(NodeObject linkedObject);

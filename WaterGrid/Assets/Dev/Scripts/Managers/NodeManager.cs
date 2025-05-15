@@ -140,6 +140,21 @@ public sealed class NodeManager
     }
 
     /// <summary>
+    /// 최상위 오브젝트와 연결되어 있는지 설정해주는 함수
+    /// </summary>
+    private void SetConnectTopObject(NodeObject parent, NodeObject children, bool value)
+    {
+        children.SetIsConnectTopObject(value);
+        if (_nodeDict.TryGetValue(children, out List<(NodeObject key, Line value)> tupleList) is false)
+            return;
+
+        foreach (var tuple in tupleList)
+        {
+            SetConnectTopObject(children, tuple.key, value);
+        }
+    }
+
+    /// <summary>
     /// 노드 연결 선 제작 함수
     /// </summary>
     public void CreateLine(NodeObject firstObj)
@@ -183,6 +198,11 @@ public sealed class NodeManager
         tempLine.Connect(parent, children);
         Add(parent, children, tempLine);
 
+        if (parent.IsConnectTopObject is true)
+        {
+            SetConnectTopObject(parent, children, true);
+        }
+
         parent.OnConnectLineChildren(children.MyCost);
         children.OnConnectLineParent(parent);
 
@@ -197,6 +217,7 @@ public sealed class NodeManager
     public void DisconnectLine(NodeObject parent, NodeObject children)
     {
         Remove(parent, children);
+        SetConnectTopObject(parent, children, false);
         DeleteLine();
     }
 
@@ -220,6 +241,7 @@ public sealed class NodeManager
     public void ChangeTempLine(NodeObject curParent, NodeObject children, NodeObject tempParent)
     {
         Remove(curParent, children);
+        SetConnectTopObject(curParent, children, false);
         tempInteractionable = tempParent;
         tempLine.TempConnect(tempParent.transform);
     }
