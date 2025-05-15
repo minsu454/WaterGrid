@@ -1,4 +1,3 @@
-using Common.ListEx;
 using Common.PhysicsEx;
 using Cysharp.Threading.Tasks.Triggers;
 using System;
@@ -9,7 +8,7 @@ using static Unity.VisualScripting.Metadata;
 
 public sealed class NodeManager
 {
-    private readonly Dictionary<NodeObject, List<(NodeObject key, Line value)>> _nodeDict = new Dictionary<NodeObject, List<(NodeObject key, Line value)>>();
+    private NodeContainer _container = new NodeContainer();
 
     private Line tempLine;                                      //임시 라인
     private Interactionable tempInteractionable;                //선택 
@@ -23,25 +22,6 @@ public sealed class NodeManager
     public void OnUpdate()
     {
         lineUpdateEvent?.Invoke(1, InputManager.inputWorldPoint);
-    }
-
-    /// <summary>
-    /// 노드 추가 함수
-    /// </summary>
-    private void Add(NodeObject parent, NodeObject children, Line line)
-    {
-        if (_nodeDict.TryGetValue(parent, out List <(NodeObject key, Line value)> tupleList))
-        {
-            _nodeDict[parent].Add((children, line));
-            return;
-        }
-
-        tupleList = new List<(NodeObject key, Line value)>
-        {
-            (children, line)
-        };
-
-        _nodeDict.Add(parent, tupleList);
     }
 
     /// <summary>
@@ -71,7 +51,7 @@ public sealed class NodeManager
         }
 
         if ((PhysicsEx.IsPointInCircle(parent.transform.position, parent.Radius, children.transform.position) is false && parent.Type != children.Type)
-             || Contains(parent, children))
+             || _container.Contains(parent, children))
         {
             DeleteLine();
             return;
@@ -90,53 +70,8 @@ public sealed class NodeManager
         if (children.ParentNodeObject == null)
             return;
 
-        Line line = Remove(children.ParentNodeObject, children);
+        Line line = _container.Remove(children.ParentNodeObject, children);
         line.Disconnect();
-    }
-
-    /// <summary>
-    /// 노드 삭제 함수
-    /// </summary>
-    private Line Remove(NodeObject parent, NodeObject children)
-    {
-        if (_nodeDict.TryGetValue(parent, out List<(NodeObject key, Line value)> tupleList) is false)
-        {
-            Debug.LogError($"Is not found Dictionary Key : _nodeDict");
-            return default;
-        }
-
-        if (tupleList.TryGetTupleByKey(children, out (NodeObject key, Line value) tuple) is false)
-        {
-            Debug.LogError($"Is not found tupleList Key : (NodeObject, Line)");
-            return default;
-        }
-
-        parent.OnDisconnectLineParent(children.MyCost);
-        children.OnDisconnectLineChildren(parent.MyCost);
-        tupleList.Remove(tuple);
-
-        if (tupleList.Count == 0)
-            _nodeDict.Remove(parent);
-
-        return tuple.value;
-    }
-
-    /// <summary>
-    /// 노드가 포함되어 있는지 체크 함수
-    /// </summary>
-    private bool Contains(NodeObject parent, NodeObject children)
-    {
-        if (_nodeDict.TryGetValue(parent, out List<(NodeObject key, Line value)> tupleList) is false)
-        {
-            return false;
-        }
-
-        if (tupleList.ContainsTuple(children) is false)
-        {
-            return false;
-        }
-
-        return true;
     }
 
     /// <summary>
@@ -145,7 +80,7 @@ public sealed class NodeManager
     private void SetConnectTopObject(NodeObject parent, NodeObject children, bool value)
     {
         children.SetIsConnectTopObject(value);
-        if (_nodeDict.TryGetValue(children, out List<(NodeObject key, Line value)> tupleList) is false)
+        if (_container.TryGetValue(children, out List<(NodeObject key, Line value)> tupleList) is false)
             return;
 
         foreach (var tuple in tupleList)
@@ -196,7 +131,7 @@ public sealed class NodeManager
     public void ConnectLine(NodeObject parent, NodeObject children)
     {
         tempLine.Connect(parent, children);
-        Add(parent, children, tempLine);
+        _container.Add(parent, children, tempLine);
 
         if (parent.IsConnectTopObject is true)
         {
@@ -216,7 +151,7 @@ public sealed class NodeManager
     /// </summary>
     public void DisconnectLine(NodeObject parent, NodeObject children)
     {
-        Remove(parent, children);
+        _container.Remove(parent, children);
         SetConnectTopObject(parent, children, false);
         DeleteLine();
     }
@@ -240,7 +175,7 @@ public sealed class NodeManager
     /// </summary>
     public void ChangeTempLine(NodeObject curParent, NodeObject children, NodeObject tempParent)
     {
-        Remove(curParent, children);
+        _container.Remove(curParent, children);
         SetConnectTopObject(curParent, children, false);
         tempInteractionable = tempParent;
         tempLine.TempConnect(tempParent.transform);

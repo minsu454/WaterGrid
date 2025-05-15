@@ -162,4 +162,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   offsetVec: {x: -0.4, y: 0.6, z: 2}
-  FillAmountRenderer: {fileID: 0}
+  FillAmountRenderer: {fileID: 3396887920993616733}
