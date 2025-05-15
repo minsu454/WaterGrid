@@ -83,8 +83,8 @@ public class WarningIcon : MonoBehaviour, IObjectPoolable<WarningIcon>
     /// </summary>
     public void Stop()
     {
-        gameObject.SetActive(false);
         curCount = 0;
+        gameObject.SetActive(false);
     }
 
     private void OnDisable()

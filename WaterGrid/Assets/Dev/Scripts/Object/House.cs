@@ -17,6 +17,9 @@ public class House : NodeObject
 
         if (value is false)
         {
+            if (warningIcon != null)
+                return;
+
             warningIcon = GameManager.instance.warningIconObjectPool.GetObject();
 
             warningIcon.gameObject.SetActive(true);
@@ -24,11 +27,11 @@ public class House : NodeObject
         }
         else
         {
-            if (warningIcon != null)
-            {
-                warningIcon.Stop();
-                warningIcon = null;
-            }
+            if (warningIcon == null)
+                return;
+
+            warningIcon.Stop();
+            warningIcon = null;
         }
     }
 
