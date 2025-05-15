@@ -50,7 +50,8 @@ public sealed class NodeManager
             parent = node;
         }
 
-        if ((PhysicsEx.IsPointInCircle(parent.transform.position, parent.Radius, children.transform.position) is false && parent.Type != children.Type)
+        if ((PhysicsEx.IsPointInCircle(parent.transform.position, parent.Radius, children.transform.position) is false
+            && parent.Type != children.Type)
              || _container.Contains(parent, children))
         {
             DeleteLine();

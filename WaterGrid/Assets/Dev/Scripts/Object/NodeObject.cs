@@ -18,7 +18,7 @@ public abstract class NodeObject : MonoBehaviour, Interactionable
     }
 
     [SerializeField] private bool isTopObject = false;          //최상위 객체인지 확인 값
-    [SerializeField] private bool isConnectTopObject = false;   //최상위 객체와 연결되어 있는지 확인 값
+    [SerializeField] private bool isConnectTopObject = false; //최상위 객체와 연결되어 있는지 확인 값
     public bool IsConnectTopObject
     {
         get { return isConnectTopObject; }
@@ -60,7 +60,7 @@ public abstract class NodeObject : MonoBehaviour, Interactionable
     [Header("Text")]
     [SerializeField] protected TextMeshPro costText;            //코스트 텍스트
 
-    private void Awake()
+    private void Start()
     {
         Initialized();
     }
@@ -68,7 +68,7 @@ public abstract class NodeObject : MonoBehaviour, Interactionable
     public void Initialized()
     {
         AreaTr.localScale = new Vector2(radius, radius);
-        isConnectTopObject = isTopObject;
+        SetIsConnectTopObject(isTopObject);
         SetText();
     }
 
@@ -80,11 +80,17 @@ public abstract class NodeObject : MonoBehaviour, Interactionable
         return linkedObject.ConnectType.HasFlag(myType) && connectType.HasFlag(linkedObject.Type) && IsConnectCost(linkedObject) && linkedObject.IsConnectCost(this);
     }
 
-    public void SetIsConnectTopObject(bool value)
+    /// <summary>
+    /// 최상위 오브젝트와 연결 되어있는지 확인 값 설정 함수
+    /// </summary>
+    public virtual void SetIsConnectTopObject(bool value)
     {
         isConnectTopObject = value;
     }
 
+    /// <summary>
+    /// 연결 시 필요한 요구 코스트가 충족되는지 반환 함수
+    /// </summary>
     public abstract bool IsConnectCost(NodeObject linkedObject);
 
     /// <summary>

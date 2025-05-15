@@ -1,4 +1,5 @@
 using Common.SceneEx;
+using Common.Time;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -26,6 +27,7 @@ public sealed class Managers : MonoBehaviour
         instance.uiManager = CreateManager<UIManager>(go.transform);
         instance.soundManager = CreateManager<SoundManager>(go.transform);
 
+        TimeManager.Init();
         SceneJobLoader.Init();
     }
 

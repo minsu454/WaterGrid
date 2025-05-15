@@ -1,6 +1,5 @@
+using Common.Time;
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class WarningIcon : MonoBehaviour, IObjectPoolable<WarningIcon>
@@ -8,6 +7,10 @@ public class WarningIcon : MonoBehaviour, IObjectPoolable<WarningIcon>
     [SerializeField] private Vector3 offsetVec = new Vector3(-0.4f, 0.6f, 2);
     [SerializeField] private SpriteRenderer FillAmountRenderer;     //감지바 랜더러
 
+    [SerializeField] private float curCount = 0;
+    [SerializeField] private float maxCount;
+
+    private Transform targetTr;
     private MaterialPropertyBlock propertyBlock;                    //머터리얼 복사본 생성하지 않고 값 수정하기 위한 변수
 
     public event Action<WarningIcon> ReturnEvent;
@@ -22,6 +25,7 @@ public class WarningIcon : MonoBehaviour, IObjectPoolable<WarningIcon>
     /// </summary>
     public void Init(Transform targetTr)
     {
+        this.targetTr = targetTr;
         transform.position = targetTr.position + offsetVec;
         ResetIcon();
     }
@@ -32,6 +36,19 @@ public class WarningIcon : MonoBehaviour, IObjectPoolable<WarningIcon>
     public void Warning()
     {
         SetFillAmount(0);
+    }
+
+    private void Update()
+    {
+        if (curCount < maxCount)
+            curCount += TimeType.InGame.Get() * Time.deltaTime;
+        else
+        {
+            TimeManager.SetTime(TimeType.InGame, 0f);
+            GameOver();
+        }
+
+        SetFillAmount(curCount / maxCount);
     }
 
     /// <summary>
@@ -59,6 +76,15 @@ public class WarningIcon : MonoBehaviour, IObjectPoolable<WarningIcon>
         FillAmountRenderer.GetPropertyBlock(propertyBlock);
         propertyBlock.SetFloat("_FillAmount", value);
         FillAmountRenderer.SetPropertyBlock(propertyBlock);
+    }
+
+    /// <summary>
+    /// 바 멈추기
+    /// </summary>
+    public void Stop()
+    {
+        gameObject.SetActive(false);
+        curCount = 0;
     }
 
     private void OnDisable()
