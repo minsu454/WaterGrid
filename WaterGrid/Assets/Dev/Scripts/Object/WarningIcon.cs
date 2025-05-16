@@ -10,7 +10,7 @@ public class WarningIcon : MonoBehaviour, IObjectPoolable<WarningIcon>
     [SerializeField] private float curCount = 0;
     [SerializeField] private float maxCount;
 
-    private Transform targetTr;
+    private IWarningable warningable = null;
     private MaterialPropertyBlock propertyBlock;                    //머터리얼 복사본 생성하지 않고 값 수정하기 위한 변수
 
     public event Action<WarningIcon> ReturnEvent;
@@ -23,10 +23,12 @@ public class WarningIcon : MonoBehaviour, IObjectPoolable<WarningIcon>
     /// <summary>
     /// 초기화 함수
     /// </summary>
-    public void Init(Transform targetTr)
+    public void Init(IWarningable warningable)
     {
-        this.targetTr = targetTr;
-        transform.position = targetTr.position + offsetVec;
+        this.warningable = warningable;
+        warningable.Outline.enabled = true;
+        transform.position = warningable.transform.position + offsetVec;
+        WarningManager.Instance.warningContainer.Add(warningable);
         ResetIcon();
     }
 
@@ -84,6 +86,9 @@ public class WarningIcon : MonoBehaviour, IObjectPoolable<WarningIcon>
     public void Stop()
     {
         curCount = 0;
+        WarningManager.Instance.warningContainer.Remove(warningable);
+        warningable.Outline.enabled = false;
+        warningable = null;
         gameObject.SetActive(false);
     }
 

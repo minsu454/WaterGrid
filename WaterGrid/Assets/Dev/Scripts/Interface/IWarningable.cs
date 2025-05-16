@@ -5,6 +5,8 @@ using UnityEngine;
 /// </summary>
 public interface IWarningable
 {
+    public Transform transform { get; }
+
     /// <summary>
     /// 위험 아이콘
     /// </summary>

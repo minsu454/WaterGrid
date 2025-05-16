@@ -3,11 +3,15 @@ using UnityEngine;
 
 public sealed class WarningManager : MonoBehaviour
 {
+    public static WarningManager Instance;
+
     private WarningContainer _warningContainer = new WarningContainer();
+    public WarningContainer warningContainer { get { return _warningContainer; } }
     private DotweenEx dotween;
 
     private void Awake()
     {
+        Instance = this;
         Init();
     }
 
@@ -20,5 +24,10 @@ public sealed class WarningManager : MonoBehaviour
     {
         dotween.OnUpdate();
         _warningContainer.SetOutLines(dotween.Value);
+    }
+
+    private void OnDestroy()
+    {
+        Instance = null;
     }
 }

@@ -57,6 +57,7 @@ MonoBehaviour:
   radius: 1
   connectType: 2
   costText: {fileID: 6407711578768740067}
+  outline: {fileID: 959774451078935027}
 --- !u!114 &959774451078935027
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -70,7 +71,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   color: {r: 1, g: 0.25845027, b: 0, a: 1}
-  outlineSize: 10
+  outlineSize: 1
 --- !u!212 &8047102658132792965
 SpriteRenderer:
   m_ObjectHideFlags: 0

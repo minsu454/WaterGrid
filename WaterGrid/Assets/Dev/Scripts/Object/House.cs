@@ -4,11 +4,13 @@ using UnityEngine;
 
 public class House : NodeObject, IWarningable
 {
+
+    [Header("House")]
+    [SerializeField] private SpriteOutline outline;
+    public SpriteOutline Outline { get { return outline; } }
+    
     private WarningIcon warningIcon;
     public WarningIcon Icon { get { return warningIcon; } }
-
-    private SpriteOutline outline;
-    public SpriteOutline Outline { get { return outline; } }
 
     public override bool IsConnectCost(NodeObject linkedObject)
     {
@@ -26,7 +28,7 @@ public class House : NodeObject, IWarningable
 
             warningIcon = GameManager.instance.warningIconObjectPool.GetObject();
             warningIcon.gameObject.SetActive(true);
-            warningIcon.Init(transform);
+            warningIcon.Init(this);
         }
         else
         {

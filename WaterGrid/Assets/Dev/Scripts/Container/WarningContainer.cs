@@ -39,7 +39,7 @@ public sealed class WarningContainer
     /// </summary>
     public void SetOutLines(float value)
     {
-        for (int i = _warningableList.Count; i > 0; --i)
+        for (int i = _warningableList.Count - 1; i >= 0; i--)
         {
             _warningableList[i].SetOutLineAlpha(value);
         }
