@@ -2,9 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class House : NodeObject
+public class House : NodeObject, IWarningable
 {
     private WarningIcon warningIcon;
+    public WarningIcon Icon { get { return warningIcon; } }
+
+    private SpriteOutline outline;
+    public SpriteOutline Outline { get { return outline; } }
 
     public override bool IsConnectCost(NodeObject linkedObject)
     {
@@ -59,5 +63,8 @@ public class House : NodeObject
         costText.text = $"{MyCost}";
     }
 
-    
+    public void SetOutLineAlpha(float value)
+    {
+        outline.color.a = value;
+    }
 }

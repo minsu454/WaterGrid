@@ -8,7 +8,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: SpriteLine
-  m_Shader: {fileID: 4800000, guid: a5a7d1411b1ab9645ba518acd890fadd, type: 3}
+  m_Shader: {fileID: 4800000, guid: d16b11a577681d44fa5e121d63615ad2, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords:

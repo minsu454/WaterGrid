@@ -14,7 +14,7 @@ public sealed class Managers : MonoBehaviour
 
     private UIManager uiManager;
     private SoundManager soundManager;
-    private NodeManager nodeManager = new NodeManager();
+    private readonly NodeManager nodeManager = new NodeManager();
 
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
     static void Init()
