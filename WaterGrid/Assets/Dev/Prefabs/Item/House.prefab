@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4751056693370902197}
   - component: {fileID: 1664551152972067599}
+  - component: {fileID: 959774451078935027}
   - component: {fileID: 8047102658132792965}
   - component: {fileID: 3151163895625184557}
   m_Layer: 6
@@ -50,11 +51,26 @@ MonoBehaviour:
   myType: 4
   myCost: 1
   isTopObject: 0
+  isConnectTopObject: 0
   maxConnectCost: 1
   AreaTr: {fileID: 4751056693370902197}
   radius: 1
   connectType: 2
   costText: {fileID: 6407711578768740067}
+--- !u!114 &959774451078935027
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 845844679127355841}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f04ec2061f34bd544b9d26a91cad16c8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  color: {r: 1, g: 0.25845027, b: 0, a: 1}
+  outlineSize: 10
 --- !u!212 &8047102658132792965
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -75,7 +91,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 9b311bcc85f64304b878b9e9adb080c8, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
