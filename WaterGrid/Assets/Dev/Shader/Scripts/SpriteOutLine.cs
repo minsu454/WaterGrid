@@ -4,19 +4,23 @@ using UnityEngine;
 /// 아웃라인 보여주는 Class
 /// </summary>
 [ExecuteInEditMode]
+[RequireComponent(typeof(SpriteRenderer))]
 public class SpriteOutline : MonoBehaviour
 {
     public Color color = Color.white;
 
-    [Range(0, 16)]
-    public int outlineSize = 1;
+    [Range(0, 100)]
+    public float outlineThickness = 1f;
+
+    public bool outlineEnabled = true;
 
     private SpriteRenderer spriteRenderer;
+    private MaterialPropertyBlock mpb;
 
     void OnEnable()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
-
+        mpb = new MaterialPropertyBlock();
         UpdateOutline(true);
     }
 
@@ -27,19 +31,22 @@ public class SpriteOutline : MonoBehaviour
 
     void Update()
     {
-        UpdateOutline(true);
+        UpdateOutline(outlineEnabled);
     }
 
     /// <summary>
-    /// 아웃라인 그려주는 함수
+    /// 쉐이더에 아웃라인 관련 파라미터 설정
     /// </summary>
     void UpdateOutline(bool outline)
     {
-        MaterialPropertyBlock mpb = new MaterialPropertyBlock();
+        if (spriteRenderer == null || mpb == null) return;
+
         spriteRenderer.GetPropertyBlock(mpb);
-        mpb.SetFloat("_Outline", outline ? 1f : 0);
-        mpb.SetColor("_OutlineColor", color);
-        mpb.SetFloat("_OutlineSize", outlineSize);
+
+        mpb.SetFloat("_OutlineEnabled", outline ? 1f : 0f);
+        mpb.SetColor("_SolidOutline", color);
+        mpb.SetFloat("_Thickness", outlineThickness);
+
         spriteRenderer.SetPropertyBlock(mpb);
     }
 }
