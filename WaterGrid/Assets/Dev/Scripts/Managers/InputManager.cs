@@ -1,9 +1,12 @@
+using System;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 
 public sealed class InputManager : MonoBehaviour
 {
+    public static InputManager Instance { get; private set; }
+
     [SerializeField] private InputType inputType;       //인풋 타입
 
     public static Vector2 inputWorldPoint
@@ -12,6 +15,12 @@ public sealed class InputManager : MonoBehaviour
     }
 
     private bool isPress;
+    public bool isUIPress;
+
+    private void Awake()
+    {
+        Instance = this;
+    }
 
     private void Update()
     {
@@ -24,9 +33,15 @@ public sealed class InputManager : MonoBehaviour
     /// <summary>
     /// 클릭 시 호출 함수
     /// </summary>
-    public void OnClick(InputAction.CallbackContext context)
+    private void OnClick(InputAction.CallbackContext context)
     {
-        if (context.phase == InputActionPhase.Performed && EventSystem.current.IsPointerOverGameObject() is false)
+        Debug.Log(isUIPress);
+        if (EventSystem.current.IsPointerOverGameObject() is true || isUIPress is true)
+            return;
+
+
+
+        if (context.phase == InputActionPhase.Performed)
         {
             Performed();
             isPress = true;
@@ -41,7 +56,7 @@ public sealed class InputManager : MonoBehaviour
     /// <summary>
     /// 키다운 시 호출 함수
     /// </summary>
-    public void Performed()
+    private void Performed()
     {
         if (Managers.Node.GetSelected(out Interactionable interaction) is false)
             return;
@@ -52,7 +67,7 @@ public sealed class InputManager : MonoBehaviour
     /// <summary>
     /// 키 땠을 시 호출 함수
     /// </summary>
-    public void Canceled()
+    private void Canceled()
     {
         if (Managers.Node.GetSelected(out Interactionable interaction) is true)
         {
@@ -66,5 +81,10 @@ public sealed class InputManager : MonoBehaviour
         {
             Managers.Node.DeleteLine();
         }
+    }
+
+    private void OnDestroy()
+    {
+        Instance = null;
     }
 }

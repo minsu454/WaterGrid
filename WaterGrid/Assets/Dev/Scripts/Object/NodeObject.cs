@@ -36,7 +36,7 @@ public abstract class NodeObject : MonoBehaviour, Interactionable
         get { return curConnectCost; }
     }
 
-    [SerializeField] private int maxConnectCost;                //최대 연결 비용
+    [SerializeField] protected int maxConnectCost;              //최대 연결 비용
     public int MaxConnectCost
     {
         get { return maxConnectCost; }

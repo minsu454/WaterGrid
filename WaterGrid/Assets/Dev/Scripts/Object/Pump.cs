@@ -49,4 +49,10 @@ public class Pump : NodeObject
     {
         costText.text = $"{CurConnectCost} / {MaxConnectCost}";
     }
+
+    public void Upgrade(int upgradeCount)
+    {
+        maxConnectCost += upgradeCount;
+        SetText();
+    }
 }
