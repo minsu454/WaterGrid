@@ -1,19 +1,26 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 public class HammerBtn : ButtonUI
 {
+    [SerializeField] private int useCount;
     [SerializeField] private int upgradeCount;
 
     public override void OnPointerDown(PointerEventData eventData)
     {
+        if (useCount == 0)
+            return;
+
         base.OnPointerDown(eventData);
 
     }
 
     public override void OnPointerUp(PointerEventData eventData)
     {
-        
+        if (useCount == 0)
+            return;
+
         base.OnPointerUp(eventData);
     }
 
@@ -28,10 +35,5 @@ public class HammerBtn : ButtonUI
 
             pump.Upgrade(upgradeCount);
         }
-    }
-
-    protected override void OnUpdate()
-    {
-        
     }
 }

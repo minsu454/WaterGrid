@@ -18,7 +18,7 @@ public sealed class NodeManager
 
     public void OnUpdate()
     {
-        lineUpdateEvent?.Invoke(1, InputManager.inputWorldPoint);
+        lineUpdateEvent?.Invoke(1, InputManager.InputWorldPoint);
     }
 
     /// <summary>
@@ -200,7 +200,7 @@ public sealed class NodeManager
     /// </summary>
     private bool IsMouseHit(out RaycastHit2D hit)
     {
-        Vector2 vec = InputManager.inputWorldPoint;
+        Vector2 vec = InputManager.InputWorldPoint;
         hit = Physics2D.Linecast(vec, vec * 5);
 
         if (!hit)

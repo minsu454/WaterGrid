@@ -9,9 +9,14 @@ public sealed class InputManager : MonoBehaviour
 
     [SerializeField] private InputType inputType;       //인풋 타입
 
-    public static Vector2 inputWorldPoint
+    public static Vector2 InputWorldPoint
     {
         get { return Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue()); }
+    }
+
+    public static Vector2 InputScreenPoint
+    {
+        get { return Mouse.current.position.ReadValue(); }
     }
 
     private bool isPress;
@@ -35,11 +40,8 @@ public sealed class InputManager : MonoBehaviour
     /// </summary>
     private void OnClick(InputAction.CallbackContext context)
     {
-        Debug.Log(isUIPress);
         if (EventSystem.current.IsPointerOverGameObject() is true || isUIPress is true)
             return;
-
-
 
         if (context.phase == InputActionPhase.Performed)
         {

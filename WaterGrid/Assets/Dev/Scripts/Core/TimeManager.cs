@@ -18,7 +18,7 @@ namespace Common.Time
         /// <summary>
         /// 시간 설정해주는 함수
         /// </summary>
-        public static void SetTime(TimeType type, float timeScale)
+        public static void SetTime(this TimeType type, float timeScale)
         {
             if (_timeContainerDict.TryGetValue(type, out float value) is false)
             {

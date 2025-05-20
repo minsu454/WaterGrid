@@ -21,9 +21,4 @@ public class PumpBtn : ButtonUI
     {
 
     }
-
-    protected override void OnUpdate()
-    {
-
-    }
 }
