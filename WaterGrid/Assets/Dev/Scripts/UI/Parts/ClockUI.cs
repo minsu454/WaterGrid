@@ -19,4 +19,14 @@ public class ClockUI : MonoBehaviour
             clockwiseRectTr.localEulerAngles.y,
             clockwiseRectTr.localEulerAngles.z - TimeType.InGame.Get() * speed * Time.deltaTime);
     }
+
+    public void OnPause()
+    {
+        TimeType.InGame.SetTime(0f);
+    }
+
+    public void OnPlay()
+    {
+        TimeType.InGame.SetTime(1f);
+    }
 }
