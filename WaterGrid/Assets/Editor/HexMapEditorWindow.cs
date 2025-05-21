@@ -60,7 +60,10 @@ public class HexMapEditorWindow : CustomWindow<HexMapEditorWindow>
 
                 Vector2 worldPos = HexUtility.HexToWorld2D(qr, rr, tileSize);
                 Vector2Int coord = new Vector2Int(qr, rr);
-                //HexUtility.DrawHex2D(worldPos, tileSize, coord, );
+                bool hasValue = _hexDict.ContainsKey(coord);
+                float value = hasValue ? _hexDict[coord] : -1;
+
+                HexUtility.DrawHex2D(worldPos, tileSize, hasValue, value);
             }
         }
     }
