@@ -25,6 +25,7 @@ public class HexMapEditorWindow : CustomWindow<HexMapEditorWindow>
         controller.leftMouseDownEvent += OnLeftDrag;
         controller.leftMouseDragEvent += OnLeftDrag;
         controller.rightMouseDownEvent += OnRightDrag;
+        controller.rightMouseDragEvent += OnRightDrag;
     }
 
     protected override void Stop()
@@ -32,6 +33,7 @@ public class HexMapEditorWindow : CustomWindow<HexMapEditorWindow>
         controller.leftMouseDownEvent -= OnLeftDrag;
         controller.leftMouseDragEvent -= OnLeftDrag;
         controller.rightMouseDownEvent -= OnRightDrag;
+        controller.rightMouseDragEvent -= OnRightDrag;
         base.Stop();
     }
 
@@ -43,7 +45,7 @@ public class HexMapEditorWindow : CustomWindow<HexMapEditorWindow>
 
         GUILayout.Space(10);
         GUILayout.Label("Tile Percentage Fill", EditorStyles.boldLabel);
-        fillSlider = EditorGUILayout.Slider("Fill %", fillSlider, 0f, 100f);
+        fillSlider = EditorGUILayout.Slider("Fill %", fillSlider, 0.001f, 100f);
     }
 
     protected override void OnSceneGUI(SceneView sceneView)

@@ -48,14 +48,18 @@ public sealed class ComstomMapEditorController
         {
             case EventType.MouseDown:
                 mouseDown?.Invoke(e.mousePosition);
+                e.Use();
                 break;
             case EventType.MouseDrag:
                 mouseDrag?.Invoke(e.mousePosition);
+                e.Use();
                 break;
             case EventType.MouseUp:
                 mouseUp?.Invoke(e.mousePosition);
+                e.Use();
                 break;
         }
+
         InternalEditorUtility.RepaintAllViews();
     }
 }
