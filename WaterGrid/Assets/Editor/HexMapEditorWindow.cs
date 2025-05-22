@@ -2,6 +2,7 @@ using UnityEditor;
 using UnityEngine;
 using System.Collections.Generic;
 using Common.Hexagon;
+using static Codice.Client.Common.Servers.RecentlyUsedServers;
 
 public class HexMapEditorWindow : CustomWindow<HexMapEditorWindow>
 {
@@ -21,12 +22,16 @@ public class HexMapEditorWindow : CustomWindow<HexMapEditorWindow>
     protected override void Run()
     {
         base.Run();
-        controller.leftMouseDownEvent += OnLeftClick;
+        controller.leftMouseDownEvent += OnLeftDrag;
+        controller.leftMouseDragEvent += OnLeftDrag;
+        controller.rightMouseDownEvent += OnRightDrag;
     }
 
     protected override void Stop()
     {
-        controller.leftMouseDownEvent -= OnLeftClick;
+        controller.leftMouseDownEvent -= OnLeftDrag;
+        controller.leftMouseDragEvent -= OnLeftDrag;
+        controller.rightMouseDownEvent -= OnRightDrag;
         base.Stop();
     }
 
@@ -62,13 +67,15 @@ public class HexMapEditorWindow : CustomWindow<HexMapEditorWindow>
                 Vector2Int coord = new Vector2Int(qr, rr);
                 bool hasValue = _hexDict.ContainsKey(coord);
                 float value = hasValue ? _hexDict[coord] : -1;
+                float alpha = Mathf.Clamp01(value / 100f);
+                Color color = new Color(0f, 1f, 0f, alpha);
 
-                HexUtility.DrawHex2D(worldPos, tileSize, hasValue, value);
+                HexUtility.DrawHex2D(worldPos, tileSize, hasValue, value, color);
             }
         }
     }
 
-    private void OnLeftClick(Vector3 screenPos)
+    private void OnLeftDrag(Vector3 screenPos)
     {
         Vector2 mousePos = screenPos;
         mousePos.y = SceneView.currentDrawingSceneView.camera.pixelHeight - mousePos.y;
@@ -88,6 +95,32 @@ public class HexMapEditorWindow : CustomWindow<HexMapEditorWindow>
                 if (HexUtility.PointInHex(worldPos, world, tileSize))
                 {
                     _hexDict[new Vector2Int(qr, rr)] = fillSlider;
+                    return;
+                }
+            }
+        }
+    }
+
+    private void OnRightDrag(Vector3 screenPos)
+    {
+        Vector2 mousePos = screenPos;
+        mousePos.y = SceneView.currentDrawingSceneView.camera.pixelHeight - mousePos.y;
+        Vector3 world = SceneView.currentDrawingSceneView.camera.ScreenToWorldPoint(new Vector3(mousePos.x, mousePos.y, 10));
+
+        int qOffset = -gridWidth / 2;
+        int rOffset = -gridHeight / 2;
+
+        for (int r = 0; r < gridHeight; r++)
+        {
+            for (int q = 0; q < gridWidth; q++)
+            {
+                int qr = q + qOffset;
+                int rr = r + rOffset;
+
+                Vector2 worldPos = HexUtility.HexToWorld2D(qr, rr, tileSize);
+                if (HexUtility.PointInHex(worldPos, world, tileSize) && _hexDict.ContainsKey(new Vector2Int(qr, rr)))
+                {
+                    _hexDict.Remove(new Vector2Int(qr, rr));
                     return;
                 }
             }

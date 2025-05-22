@@ -6,9 +6,11 @@ using UnityEngine;
 public sealed class ComstomMapEditorController
 {
     public event Action<Vector3> leftMouseDownEvent;     //왼쪽 마우스 다운 이벤트
+    public event Action<Vector3> leftMouseDragEvent;       //왼쪽 마우스 드래그 이벤트 
     public event Action<Vector3> leftMouseUpEvent;       //왼쪽 마우스 업 이벤트 
 
     public event Action<Vector3> rightMouseDownEvent;    //오른쪽 마우스 다운 이벤트
+    public event Action<Vector3> rightMouseDragEvent;    //오른쪽 마우스 드래그 이벤트
     public event Action<Vector3> rightMouseUpEvent;      //오른쪽 마우스 업 이벤트
 
     /// <summary>
@@ -29,18 +31,18 @@ public sealed class ComstomMapEditorController
     {
         if (e.button == 0)
         {
-            MouseEvent(e, leftMouseDownEvent, leftMouseUpEvent);
+            MouseEvent(e, leftMouseDownEvent, leftMouseDragEvent, leftMouseUpEvent);
         }
         else if (e.button == 1)
         {
-            MouseEvent(e, rightMouseDownEvent, rightMouseUpEvent);
+            MouseEvent(e, rightMouseDownEvent, rightMouseDragEvent, rightMouseUpEvent);
         }
     }
 
     /// <summary>
     /// 마우스 입력 이벤트 함수
     /// </summary>
-    private void MouseEvent(Event e, Action<Vector3> mouseDown, Action<Vector3> mouseUp)
+    private void MouseEvent(Event e, Action<Vector3> mouseDown, Action<Vector3> mouseDrag, Action<Vector3> mouseUp)
     {
         switch (e.type)
         {
@@ -48,7 +50,7 @@ public sealed class ComstomMapEditorController
                 mouseDown?.Invoke(e.mousePosition);
                 break;
             case EventType.MouseDrag:
-
+                mouseDrag?.Invoke(e.mousePosition);
                 break;
             case EventType.MouseUp:
                 mouseUp?.Invoke(e.mousePosition);

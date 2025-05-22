@@ -14,7 +14,7 @@ namespace Common.Hexagon
             return new Vector2(x, y);
         }
 
-        public static void DrawHex2D(Vector2 position, float tileSize, bool hasValue, float percent)
+        public static void DrawHex2D(Vector2 position, float tileSize, bool hasValue, float percent, Color color)
         {
             Vector3[] cornerArr = new Vector3[7];
             for (int i = 0; i < 6; i++)
@@ -31,9 +31,6 @@ namespace Common.Hexagon
 
             if (hasValue)
             {
-                float alpha = Mathf.Clamp01(percent / 100f);
-                Color color = new Color(0f, 1f, 0f, alpha);
-                Handles.DrawAAConvexPolygon(cornerArr[..6]);
                 Handles.color = color;
                 Handles.DrawAAConvexPolygon(cornerArr[..6]);
 
@@ -46,10 +43,8 @@ namespace Common.Hexagon
                 };
                 Handles.Label(new Vector3(position.x, position.y, 0), $"{percent:F0}%", style);
             }
-            else
-            {
-                Handles.DrawPolyLine(cornerArr);
-            }
+
+            Handles.DrawPolyLine(cornerArr);
         }
 
         public static bool PointInHex(Vector2 center, Vector3 point, float tileSize)
