@@ -6,8 +6,8 @@ using UnityEngine;
 public abstract class NodeObject : MonoBehaviour, Interactionable
 {
     [Header("MyObject")]
-    [SerializeField] private NodeObjectType myType;             //내 타입
-    public NodeObjectType Type
+    [SerializeField] private TileType myType;             //내 타입
+    public TileType Type
     {
         get { return myType; }
     }
@@ -51,8 +51,8 @@ public abstract class NodeObject : MonoBehaviour, Interactionable
     }
 
     [Header("OtherObject")]
-    [SerializeField] private NodeObjectType connectType;        //연결 가능한 타입
-    public NodeObjectType ConnectType
+    [SerializeField] private TileType connectType;        //연결 가능한 타입
+    public TileType ConnectType
     {
         get { return connectType; }
     }

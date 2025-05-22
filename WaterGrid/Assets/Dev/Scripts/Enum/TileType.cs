@@ -4,7 +4,7 @@ using System;
 /// 연결 오브젝트 타입
 /// </summary>
 [Flags]
-public enum NodeObjectType
+public enum TileType
 {
     None = 0,
     Water = 1 << 0,

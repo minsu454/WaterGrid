@@ -1,10 +1,14 @@
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.Device;
 
 namespace Common.Hexagon
 {
     public static class HexUtility
     {
+        /// <summary>
+        /// 헥사곤 좌표 월드 좌표로 변환 함수
+        /// </summary>
         public static Vector2 HexToWorld2D(int q, int r, float tileSize)
         {
             float width = Mathf.Sqrt(3f) * tileSize;
@@ -14,6 +18,9 @@ namespace Common.Hexagon
             return new Vector2(x, y);
         }
 
+        /// <summary>
+        /// 헥사곤 하나를 Scene 뷰에 그리는 함수
+        /// </summary>
         public static void DrawHex2D(Vector2 position, float tileSize, bool hasValue, float percent, Color color)
         {
             Vector3[] cornerArr = new Vector3[7];
@@ -35,19 +42,27 @@ namespace Common.Hexagon
                 Handles.DrawAAConvexPolygon(cornerArr[..6]);
 
                 Handles.color = Color.white;
-                GUIStyle style = new GUIStyle(GUI.skin.label)
+
+                if (percent > 0)
                 {
-                    alignment = TextAnchor.MiddleCenter,
-                    normal = { textColor = Color.black },
-                    fontStyle = FontStyle.Bold
-                };
-                Handles.Label(new Vector3(position.x, position.y, 0), $"{percent:F0}%", style);
+                    GUIStyle style = new GUIStyle(GUI.skin.label)
+                    {
+                        alignment = TextAnchor.LowerCenter,
+                        normal = { textColor = Color.black },
+                        fontStyle = FontStyle.Normal
+                    };
+
+                    Handles.Label(new Vector3(position.x, position.y - 0.25f, 0), $"{percent:F2}%", style);
+                }
             }
 
             Handles.DrawPolyLine(cornerArr);
         }
 
-        public static bool PointInHex(Vector2 center, Vector3 point, float tileSize)
+        /// <summary>
+        /// 지정된 point가 해당 헥사곤 안에 포함되는지 판별하는 함수
+        /// </summary>
+        public static bool ContainHex(Vector2 center, Vector3 point, float tileSize)
         {
             Vector2 local = new Vector2(point.x - center.x, point.y - center.y);
             for (int i = 0; i < 6; i++)

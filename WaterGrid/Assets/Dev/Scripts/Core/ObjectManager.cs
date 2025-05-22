@@ -47,7 +47,7 @@ namespace Common.Objects
             await UniTask.CompletedTask;
             ResourcesLoaderSO loaderSO = Resources.Load<ResourcesLoaderSO>($"Loader/{label}LoadSO");
 
-            foreach (LoadData data in loaderSO.loadDataList)
+            foreach (LoadAddressableData data in loaderSO.loadDataList)
             {
                 if (objectContainerDict.ContainsKey(data.path))
                 {

@@ -61,5 +61,3 @@ public sealed class MapEditorManager
         Debug.Log("Delete Completed");
     }
 }
-
-
