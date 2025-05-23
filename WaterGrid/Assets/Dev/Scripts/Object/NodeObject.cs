@@ -62,10 +62,10 @@ public abstract class NodeObject : MonoBehaviour, Interactionable
 
     private void Start()
     {
-        Initialized();
+        Init();
     }
 
-    public void Initialized()
+    public void Init()
     {
         AreaTr.localScale = new Vector2(radius, radius);
         SetIsConnectTopObject(isTopObject);

@@ -11,7 +11,7 @@ public class HexMapEditorWindow : CustomWindow<HexMapEditorWindow>
     private int gridWidth = 10;             //가로 갯수
     private int gridHeight = 10;            //세로 갯수
 
-    private readonly Dictionary<Vector2Int, (float fill, TileType type, int cost)> _hexDict = new();
+    private readonly Dictionary<Vector2Int, (float fill, TileType type)> _hexDict = new();
     private float fillSlider = 100f;
 
     private int houseCount = 0;
@@ -20,12 +20,30 @@ public class HexMapEditorWindow : CustomWindow<HexMapEditorWindow>
     private ToolMode toolMode = ToolMode.Fill;
     
     private TileType tileType = TileType.None;
-    private LoadMapData loadMapData;
-    private Dictionary<TileType, Texture2D> texture2DArr = new();
+    private static LoadMapData loadMapData;
+    private Dictionary<TileType, Texture2D> _texture2DArr = new();
 
     [MenuItem("Tools/MapEditor/Create", priority = 1)]
-    static void Init()
+    static void Create()
     {
+        CreateComstomWindow("Hex Map Editor", new Vector2(600f, 580f), new Vector2(600f, 580f));
+    }
+
+    [MenuItem("Tools/MapEditor/Load", priority = 2)]
+    static void Load()
+    {
+        string path = EditorUtility.OpenFilePanel("Open File", "", "json");
+
+        if (SaveManager.Load(path, out loadMapData) is false)
+        {
+            EditorUtility.DisplayDialog(
+            "Load Failed",                          
+            "Failed to load JSON from selected file.", 
+            "OK"                                    
+            );
+            return;
+        }
+
         CreateComstomWindow("Hex Map Editor", new Vector2(600f, 580f), new Vector2(600f, 580f));
     }
 
@@ -38,7 +56,9 @@ public class HexMapEditorWindow : CustomWindow<HexMapEditorWindow>
         controller.rightMouseDownEvent += OnRightDrag;
         controller.rightMouseDragEvent += OnRightDrag;
 
-        GUIParts.LoadAllInFolder(EditorPath.TexturePath, out texture2DArr);
+        LoadData();
+
+        GUIParts.LoadAllInFolder(EditorPath.TexturePath, out _texture2DArr);
     }
 
     protected override void Stop()
@@ -48,7 +68,7 @@ public class HexMapEditorWindow : CustomWindow<HexMapEditorWindow>
         controller.rightMouseDownEvent -= OnRightDrag;
         controller.rightMouseDragEvent -= OnRightDrag;
 
-        texture2DArr = null;
+        _texture2DArr = null;
 
         base.Stop();
     }
@@ -66,10 +86,9 @@ public class HexMapEditorWindow : CustomWindow<HexMapEditorWindow>
         GUILayout.FlexibleSpace();
         if (GUILayout.Button("Save", GUILayout.Width(100), GUILayout.Height(20)))
         {
-            string initialFilename = "SaveData_" + DateTime.Now.ToString(("MM_dd_HH_mm_ss")) + ".json";
+            string initialFilename = "Map_" + DateTime.Now.ToString(("MM_dd_HH_mm")) + ".json";
             string path = EditorUtility.SaveFilePanel("Save File", "", initialFilename, "json");
-            string json = SaveSerialize(path);
-            SaveManager.SaveMap(path, json);
+            SaveData(path);
         }
         GUILayout.EndHorizontal();
 
@@ -144,7 +163,7 @@ public class HexMapEditorWindow : CustomWindow<HexMapEditorWindow>
                 HexUtility.DrawHex2D(worldPos, tileSize, hasValue, value, color);
 
                 if (hasValue && _hexDict[coord].type != TileType.None)
-                    GUIParts.DrawIcon(worldPos, texture2DArr[_hexDict[coord].type]);
+                    GUIParts.DrawIcon(worldPos, _texture2DArr[_hexDict[coord].type]);
             }
         }
     }
@@ -154,18 +173,45 @@ public class HexMapEditorWindow : CustomWindow<HexMapEditorWindow>
     #region Save
 
     /// <summary>
-    /// 저장데이터 직렬화 함수
+    /// 저장 함수
     /// </summary>
-    private string SaveSerialize(string path)
+    private void SaveData(string path)
     {
         if (loadMapData == null)
             loadMapData = new LoadMapData();
 
+        List<TileData> tileDataList = new();
 
+        foreach (var pair in _hexDict)
+        {
+            TileData data = new TileData(pair);
+            tileDataList.Add(data);
+        }
 
-        loadMapData.MapName = Path.GetFileNameWithoutExtension(path);
-        string json = JsonUtility.ToJson("");
-        return json;
+        loadMapData.TileDataList = tileDataList;
+        loadMapData.Name = Path.GetFileNameWithoutExtension(path);
+        loadMapData.width = gridWidth;
+        loadMapData.height = gridHeight;
+        string json = JsonUtility.ToJson(loadMapData);
+
+        SaveManager.Save(path, json);
+    }
+
+    /// <summary>
+    /// 로드 함수
+    /// </summary>
+    private void LoadData()
+    {
+        if (loadMapData == null)
+            return;
+
+        foreach (var data in loadMapData.TileDataList)
+        {
+            _hexDict.Add(data.Position, new(data.Fill, data.TileType));
+        }
+
+        gridWidth = loadMapData.width;
+        gridHeight = loadMapData.height;
     }
 
     #endregion
@@ -218,7 +264,7 @@ public class HexMapEditorWindow : CustomWindow<HexMapEditorWindow>
         {
             if (_hexDict.TryGetValue(posInt, out var value) is false)
             {
-                _hexDict[posInt] = new(fillSlider, TileType.None, 0);
+                _hexDict[posInt] = new(fillSlider, TileType.None);
                 return;
             }
 
@@ -250,7 +296,7 @@ public class HexMapEditorWindow : CustomWindow<HexMapEditorWindow>
         {
             if (_hexDict.TryGetValue(posInt, out var value) is false)
             {
-                _hexDict[posInt] = new(0, tileType, 0);
+                _hexDict[posInt] = new(0, tileType);
                 return;
             }
 

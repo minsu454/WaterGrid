@@ -1,9 +1,12 @@
-﻿using System;
+using System;
+using System.Collections.Generic;
 using System.IO;
+using Unity.Plastic.Newtonsoft.Json;
+using UnityEngine;
 
 public static class SaveManager
 {
-    public static void SaveMap(string path, string json)
+    public static void Save(string path, string json)
     {
         if (path == "")
             return;
@@ -11,12 +14,26 @@ public static class SaveManager
         File.WriteAllText(path, json);
     }
 
-    public static void LoadMap(string path, Action<string> Load)
+    public static bool Load<T>(string path, out T data) where T : ILoadDatable
     {
-        if (path == "")
-            return;
+        data = default(T);
 
-        string json = File.ReadAllText(path);
-        Load.Invoke(json);
+        if (path == "")
+            return false;
+
+        try
+        {
+            string json = File.ReadAllText(path);
+            data = JsonUtility.FromJson<T>(json);
+
+            if (data == null || data.IsValid())
+                return false;
+
+            return true;
+        }
+        catch
+        {
+            return false;
+        }
     }
 }
