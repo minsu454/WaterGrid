@@ -11,8 +11,11 @@ public class HexMapEditorWindow : CustomWindow<HexMapEditorWindow>
     private int gridWidth = 10;             //가로 갯수
     private int gridHeight = 10;            //세로 갯수
 
-    private readonly Dictionary<Vector2Int, (float fill, TileType type)> _hexDict = new();
-    private float fillSlider = 100f;
+    private int curWeight = 0;              //현재 가중치
+    private int maxOneWeight = 1000;        //한 칸에 최대 가중치
+
+    private readonly Dictionary<Vector2Int, (int weight, TileType type)> _hexDict = new();
+    private int weightSlider = 1;
 
     private int houseCount = 0;
 
@@ -56,6 +59,7 @@ public class HexMapEditorWindow : CustomWindow<HexMapEditorWindow>
         controller.rightMouseDownEvent += OnRightDrag;
         controller.rightMouseDragEvent += OnRightDrag;
 
+        curWeight = 0;
         LoadData();
 
         GUIParts.LoadAllInFolder(EditorPath.TexturePath, out _texture2DArr);
@@ -129,8 +133,8 @@ public class HexMapEditorWindow : CustomWindow<HexMapEditorWindow>
 
         if (toolMode == ToolMode.Fill)
         {
-            GUILayout.Label("Fill %", GUILayout.Width(50));
-            fillSlider = EditorGUILayout.Slider(fillSlider, 0.001f, 100f, GUILayout.Width(150));
+            GUILayout.Label("Weight", GUILayout.Width(50));
+            weightSlider = EditorGUILayout.IntSlider(weightSlider, 1, maxOneWeight, GUILayout.Width(230));
         }
 
         GUILayout.EndHorizontal();
@@ -156,11 +160,14 @@ public class HexMapEditorWindow : CustomWindow<HexMapEditorWindow>
                 Vector2 worldPos = HexUtility.HexToWorld2D(qr, rr, tileSize);
                 Vector2Int coord = new Vector2Int(qr, rr);
                 bool hasValue = _hexDict.ContainsKey(coord);
-                float value = hasValue ? _hexDict[coord].fill : -1;
-                float alpha = Mathf.Clamp01(value / 100f);
+                int weight = hasValue ? _hexDict[coord].weight : -1;
+                float percent = hasValue ? (float)weight / curWeight * 100f : 0;
+                //Debug.Log($"percent {(float)weight / curWeight * 100f}");
+
+                float alpha = Mathf.Clamp01(percent / 100f);
                 Color color = new Color(0f, 1f, 0f, alpha);
 
-                HexUtility.DrawHex2D(worldPos, tileSize, hasValue, value, color);
+                HexUtility.DrawHex2D(worldPos, tileSize, hasValue, percent, color);
 
                 if (hasValue && _hexDict[coord].type != TileType.None)
                     GUIParts.DrawIcon(worldPos, _texture2DArr[_hexDict[coord].type]);
@@ -190,8 +197,9 @@ public class HexMapEditorWindow : CustomWindow<HexMapEditorWindow>
 
         loadMapData.TileDataList = tileDataList;
         loadMapData.Name = Path.GetFileNameWithoutExtension(path);
-        loadMapData.width = gridWidth;
-        loadMapData.height = gridHeight;
+        loadMapData.Width = gridWidth;
+        loadMapData.Height = gridHeight;
+        loadMapData.Weight = curWeight;
         string json = JsonUtility.ToJson(loadMapData);
 
         SaveManager.Save(path, json);
@@ -207,11 +215,12 @@ public class HexMapEditorWindow : CustomWindow<HexMapEditorWindow>
 
         foreach (var data in loadMapData.TileDataList)
         {
-            _hexDict.Add(data.Position, new(data.Fill, data.TileType));
+            curWeight += data.Weight;
+            _hexDict.Add(data.Position, new(data.Weight, data.TileType));
         }
-
-        gridWidth = loadMapData.width;
-        gridHeight = loadMapData.height;
+        
+        gridWidth = loadMapData.Width;
+        gridHeight = loadMapData.Height;
     }
 
     #endregion
@@ -264,11 +273,14 @@ public class HexMapEditorWindow : CustomWindow<HexMapEditorWindow>
         {
             if (_hexDict.TryGetValue(posInt, out var value) is false)
             {
-                _hexDict[posInt] = new(fillSlider, TileType.None);
+                _hexDict[posInt] = new(weightSlider, TileType.None);
+                curWeight += weightSlider;
                 return;
             }
 
-            value.fill = fillSlider;
+            curWeight -= value.weight;
+            value.weight = weightSlider;
+            curWeight += weightSlider;
             _hexDict[posInt] = value;
         });
     }
@@ -282,6 +294,7 @@ public class HexMapEditorWindow : CustomWindow<HexMapEditorWindow>
         {
             if (_hexDict.TryGetValue(posInt, out var value) && value.type == TileType.None)
             {
+                curWeight -= value.weight;
                 _hexDict.Remove(posInt);
             }
         });
@@ -314,7 +327,7 @@ public class HexMapEditorWindow : CustomWindow<HexMapEditorWindow>
         {
             if (_hexDict.TryGetValue(posInt, out var value))
             {
-                if (value.fill == 0)
+                if (value.weight == 0)
                     _hexDict.Remove(posInt);
                 else
                 {

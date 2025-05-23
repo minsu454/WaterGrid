@@ -10,20 +10,20 @@ using UnityEngine.UIElements;
 public class TileData
 {
     public Vector2Int Position;
-    public float Fill;
+    public int Weight;
     public TileType TileType;
 
-    public TileData(Vector2Int position, float fill, TileType type)
+    public TileData(Vector2Int position, int weight, TileType type)
     {
         Position = position;
-        Fill = fill;
+        Weight = weight;
         TileType = type;
     }
 
-    public TileData(KeyValuePair<Vector2Int, (float fill, TileType type)> pair)
+    public TileData(KeyValuePair<Vector2Int, (int weight, TileType type)> pair)
     {
         Position = pair.Key;
-        Fill = pair.Value.fill;
+        Weight = pair.Value.weight;
         TileType = pair.Value.type;
     }
 }

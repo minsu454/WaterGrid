@@ -26,7 +26,7 @@ public class HammerBtn : ButtonUI
 
     protected override void OnCompleted()
     {
-        if (Managers.Node.GetSelected(out Interactionable interaction) is false)
+        if (MapManager.Node.GetSelected(out Interactionable interaction) is false)
             return;
 
         if (interaction is Pump)

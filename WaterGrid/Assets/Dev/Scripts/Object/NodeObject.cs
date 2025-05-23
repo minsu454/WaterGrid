@@ -120,7 +120,7 @@ public abstract class NodeObject : MonoBehaviour, Interactionable
 
     public void Performed()
     {
-        Managers.Node.CreateLine(this);
+        MapManager.Node.CreateLine(this);
     }
 
     public void Pressed()
@@ -130,6 +130,6 @@ public abstract class NodeObject : MonoBehaviour, Interactionable
 
     public void Canceled()
     {
-        Managers.Node.TryAdd(this);
+        MapManager.Node.TryAdd(this);
     }
 }

@@ -8,8 +8,9 @@ using System.Collections.Generic;
 public class LoadMapData : ILoadDatable
 {
     public string Name;
-    public int width;
-    public int height;
+    public int Width;
+    public int Height;
+    public int Weight;
     public List<TileData> TileDataList;
 
     public bool IsValid()
