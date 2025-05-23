@@ -10,8 +10,8 @@ public class LoadMapData : ILoadDatable
     public string Name;
     public int Width;
     public int Height;
-    public int Weight;
     public List<TileData> TileDataList;
+    public List<AreaData> areaDataList;
 
     public bool IsValid()
     {
