@@ -197,10 +197,32 @@ public class HexMapEditorWindow : CustomWindow<HexMapEditorWindow>
 
             if (deleteIndex.HasValue)
             {
-                _areaList.RemoveAt(deleteIndex.Value);
-                if (selectedAreaIndex == deleteIndex.Value)
+                int delIdx = deleteIndex.Value;
+
+                var keysToRemove = _hexDict
+                    .Where(kvp => kvp.Value.areaIdx == delIdx)
+                    .Select(kvp => kvp.Key)
+                    .ToList();
+
+                foreach (var key in keysToRemove)
+                {
+                    _hexDict.Remove(key);
+                }
+
+                var keysToUpdate = _hexDict
+                    .Where(kvp => kvp.Value.areaIdx > delIdx)
+                    .ToList();
+
+                foreach (var kvp in keysToUpdate)
+                {
+                    _hexDict[kvp.Key] = (kvp.Value.areaIdx - 1, kvp.Value.type);
+                }
+
+                _areaList.RemoveAt(delIdx);
+
+                if (selectedAreaIndex == delIdx)
                     selectedAreaIndex = -1;
-                else if (selectedAreaIndex > deleteIndex.Value)
+                else if (selectedAreaIndex > delIdx)
                     selectedAreaIndex--;
             }
         }

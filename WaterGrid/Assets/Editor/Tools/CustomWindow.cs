@@ -18,7 +18,7 @@ public abstract class CustomWindow<T> : EditorWindow where T : EditorWindow
     }
 
     /// <summary>
-    /// 프레임마다 주기적으로 업데이트 해야하는 것들 함수
+    /// 프레임마다 주기적으로 Scene UI 업데이트 해야하는 것들 함수
     /// </summary>
     protected abstract void OnSceneGUI(SceneView sceneView);
 
