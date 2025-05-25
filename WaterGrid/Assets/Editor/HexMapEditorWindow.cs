@@ -34,7 +34,7 @@ public class HexMapEditorWindow : CustomWindow<HexMapEditorWindow>
     [MenuItem("Tools/MapEditor/Create", priority = 1)]
     static void Create()
     {
-        CreateComstomWindow("Hex Map Editor", new Vector2(600f, 580f), new Vector2(600f, 580f));
+        CreateComstomWindow("Hex Map Editor", new Vector2(550f, 400f), new Vector2(550f, 400f));
     }
 
     [MenuItem("Tools/MapEditor/Load", priority = 2)]
@@ -125,6 +125,22 @@ public class HexMapEditorWindow : CustomWindow<HexMapEditorWindow>
 
         if (toolMode == ToolMode.Brush)
         {
+            GUILayout.Space(5);
+            GUILayout.Label("Tile Preview", EditorStyles.boldLabel);
+
+            // 좌측 정렬된 텍스처 박스
+            if (tileType != TileType.None && _texture2DDict.TryGetValue(tileType, out var tex) && tex != null)
+            {
+                GUILayout.Box(tex, GUILayout.Width(128), GUILayout.Height(128));
+            }
+            else
+            {
+                GUILayout.Box(GUIContent.none, GUILayout.Width(128), GUILayout.Height(128));
+            }
+
+            GUILayout.Space(5);
+
+            // TileType 드롭다운
             GUILayout.BeginHorizontal();
             GUILayout.Label("Tile Type", GUILayout.Width(60));
             tileType = (TileType)EditorGUILayout.EnumPopup(tileType, GUILayout.Width(100));
@@ -153,10 +169,8 @@ public class HexMapEditorWindow : CustomWindow<HexMapEditorWindow>
             GUILayout.Space(10);
             GUILayout.Label("Area List", EditorStyles.boldLabel);
 
-            // 총 weight 계산
             int totalWeight = Mathf.Max(1, _areaList.Sum(a => a.Weight));
 
-            // ScrollView 시작
             AreaScrollPos = GUILayout.BeginScrollView(AreaScrollPos, GUILayout.Height(220), GUILayout.MaxWidth(450));
 
             int? deleteIndex = null;
@@ -342,8 +356,11 @@ public class HexMapEditorWindow : CustomWindow<HexMapEditorWindow>
             case TileType.None:
                 EraseTextureToWorld(screenPos);
                 break;
-            default:
+            case TileType.House:
                 DrawTextureToWorld(screenPos);
+                break;
+            default:
+                DrawTextureToWorldNoArea(screenPos);
                 break;
         }
     }
@@ -372,6 +389,9 @@ public class HexMapEditorWindow : CustomWindow<HexMapEditorWindow>
                 return;
             }
 
+            if (value.type is TileType.Water || value.type is TileType.Pump)
+                return;
+
             value.areaIdx = selectedAreaIndex;
             _hexDict[posInt] = value;
         });
@@ -392,7 +412,7 @@ public class HexMapEditorWindow : CustomWindow<HexMapEditorWindow>
     }
 
     /// <summary>
-    /// 클릭한 부분 텍스쳐 그리는 함수
+    /// 클릭한 부분 텍스쳐 그리는 함수(Area 중첩 가능)
     /// </summary>
     private void DrawTextureToWorld(Vector3 screenPos)
     {
@@ -403,6 +423,27 @@ public class HexMapEditorWindow : CustomWindow<HexMapEditorWindow>
                 _hexDict[posInt] = new(-1, tileType);
                 return;
             }
+
+            value.type = tileType;
+            _hexDict[posInt] = value;
+        });
+    }
+
+    /// <summary>
+    /// 클릭한 부분 텍스쳐 그리는 함수(Area 중첩 불가능)
+    /// </summary>
+    private void DrawTextureToWorldNoArea(Vector3 screenPos)
+    {
+        FindHexagon(screenPos, (posInt) =>
+        {
+            if (_hexDict.TryGetValue(posInt, out var value) is false)
+            {
+                _hexDict[posInt] = new(-1, tileType);
+                return;
+            }
+
+            if (value.areaIdx != -1)
+                return;
 
             value.type = tileType;
             _hexDict[posInt] = value;
