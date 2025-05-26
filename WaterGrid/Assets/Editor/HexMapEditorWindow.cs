@@ -261,7 +261,19 @@ public class HexMapEditorWindow : CustomWindow<HexMapEditorWindow>
                 int qr = q + qOffset;
                 int rr = r + rOffset;
 
-                Vector2 worldPos = HexUtility.HexToWorld2D(qr, rr, tileSize);
+                Vector2 worldPos;
+
+                if (rr % 2 != 0 && rr < 0)
+                {
+                    qr += 1;
+                    worldPos = HexUtility.HexToWorld2D(qr, rr, tileSize);
+                    qr -= 1;
+                }
+                else
+                {
+                    worldPos = HexUtility.HexToWorld2D(qr, rr, tileSize);
+                }
+
                 Vector2Int coord = new Vector2Int(qr, rr);
                 bool hasValue = _hexDict.ContainsKey(coord);
                 float percent = 0;
@@ -306,6 +318,8 @@ public class HexMapEditorWindow : CustomWindow<HexMapEditorWindow>
         loadMapData.Width = gridWidth;
         loadMapData.Height = gridHeight;
         loadMapData.areaDataList = _areaList;
+        loadMapData.totalValue = Mathf.Max(1, _areaList.Sum(a => a.Weight));
+
         string json = JsonUtility.ToJson(loadMapData);
 
         SaveManager.Save(path, json);
@@ -489,7 +503,19 @@ public class HexMapEditorWindow : CustomWindow<HexMapEditorWindow>
                 int qr = q + qOffset;
                 int rr = r + rOffset;
 
-                Vector2 worldPos = HexUtility.HexToWorld2D(qr, rr, tileSize);
+                Vector2 worldPos;
+
+                if (rr % 2 != 0 && rr < 0)
+                {
+                    qr += 1;
+                    worldPos = HexUtility.HexToWorld2D(qr, rr, tileSize);
+                    qr -= 1;
+                }
+                else
+                {
+                    worldPos = HexUtility.HexToWorld2D(qr, rr, tileSize);
+                }
+
                 if (HexUtility.ContainHex(worldPos, world, tileSize))
                 {
                     completed?.Invoke(new Vector2Int(qr, rr));

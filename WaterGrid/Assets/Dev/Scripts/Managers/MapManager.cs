@@ -10,7 +10,9 @@ public sealed class MapManager : MonoBehaviour
 
     public static NodeManager Node { get { return Instance.nodeManager; } }
 
-    private readonly string path = $"{Application.streamingAssetsPath}/MapData/Map_1.json";
+    private readonly string path = $"{Application.streamingAssetsPath}/MapData/Map_2.json";
+
+    private MapData mapData;
 
     [SerializeField] private GameObject housePrefab;
     [SerializeField] private GameObject pumpPrefab;
@@ -28,7 +30,7 @@ public sealed class MapManager : MonoBehaviour
 
     public void Init()
     {
-        MapData mapData = SaveService.Load<MapData>(path);
+        mapData = SaveService.Load<MapData>(path);
         
         nodeManager.Init(linePrefab, housePrefab, pumpPrefab, waterPrefab, hexGrid, mapData.TileDataList);
     }
@@ -36,6 +38,11 @@ public sealed class MapManager : MonoBehaviour
     private void Update()
     {
         nodeManager.OnUpdate();
+    }
+
+    public void SpawnTile()
+    {
+
     }
 
     private void OnDestroy()

@@ -15,6 +15,7 @@ namespace Common.Hexagon
             float height = 1.5f * tileSize;
             float x = (q + r * 0.5f - r / 2) * width;
             float y = r * height;
+
             return new Vector2(x, y);
         }
 
