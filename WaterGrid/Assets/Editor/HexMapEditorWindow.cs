@@ -21,7 +21,7 @@ public class HexMapEditorWindow : CustomWindow<HexMapEditorWindow>
     private ToolMode toolMode = ToolMode.Area;
     
     private TileType tileType = TileType.None;
-    private static LoadMapData loadMapData;
+    private static MapData loadMapData;
     private Dictionary<TileType, Texture2D> _texture2DDict = new();
 
     private List<AreaData> _areaList = new List<AreaData>();
@@ -291,7 +291,7 @@ public class HexMapEditorWindow : CustomWindow<HexMapEditorWindow>
     private void SaveData(string path)
     {
         if (loadMapData == null)
-            loadMapData = new LoadMapData();
+            loadMapData = new MapData();
 
         List<TileData> tileDataList = new();
 

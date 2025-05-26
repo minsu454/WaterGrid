@@ -1,9 +1,12 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Water : NodeObject
+public class Water : NodeObject, IObjectPoolable<Water>
 {
+    public event Action<Water> ReturnEvent;
+
     public override bool IsConnectCost(NodeObject linkedObject)
     {
         int temp = curConnectCost + linkedObject.MyCost;
@@ -41,5 +44,10 @@ public class Water : NodeObject
     protected override void SetText()
     {
         costText.text = $"{CurConnectCost} / {MaxConnectCost}";
+    }
+
+    private void OnDisable()
+    {
+        ReturnEvent.Invoke(this);
     }
 }

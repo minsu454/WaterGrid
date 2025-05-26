@@ -1,8 +1,9 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class House : NodeObject, IWarningable
+public class House : NodeObject, IWarningable, IObjectPoolable<House>
 {
 
     [Header("House")]
@@ -11,6 +12,8 @@ public class House : NodeObject, IWarningable
     
     private WarningIcon warningIcon;
     public WarningIcon Icon { get { return warningIcon; } }
+
+    public event Action<House> ReturnEvent;
 
     public override bool IsConnectCost(NodeObject linkedObject)
     {
@@ -68,5 +71,10 @@ public class House : NodeObject, IWarningable
     public void SetOutLineAlpha(float value)
     {
         outline.color.a = value;
+    }
+
+    private void OnDisable()
+    {
+        ReturnEvent.Invoke(this);
     }
 }

@@ -5,13 +5,13 @@ using UnityEngine;
 
 public sealed class ComstomMapEditorController
 {
-    public event Action<Vector3> leftMouseDownEvent;     //왼쪽 마우스 다운 이벤트
-    public event Action<Vector3> leftMouseDragEvent;       //왼쪽 마우스 드래그 이벤트 
-    public event Action<Vector3> leftMouseUpEvent;       //왼쪽 마우스 업 이벤트 
+    public event Action<Vector3> leftMouseDownEvent;    //왼쪽 마우스 다운 이벤트
+    public event Action<Vector3> leftMouseDragEvent;    //왼쪽 마우스 드래그 이벤트 
+    public event Action<Vector3> leftMouseUpEvent;      //왼쪽 마우스 업 이벤트 
 
-    public event Action<Vector3> rightMouseDownEvent;    //오른쪽 마우스 다운 이벤트
-    public event Action<Vector3> rightMouseDragEvent;    //오른쪽 마우스 드래그 이벤트
-    public event Action<Vector3> rightMouseUpEvent;      //오른쪽 마우스 업 이벤트
+    public event Action<Vector3> rightMouseDownEvent;   //오른쪽 마우스 다운 이벤트
+    public event Action<Vector3> rightMouseDragEvent;   //오른쪽 마우스 드래그 이벤트
+    public event Action<Vector3> rightMouseUpEvent;     //오른쪽 마우스 업 이벤트
 
     /// <summary>
     /// Get Editor Event 함수

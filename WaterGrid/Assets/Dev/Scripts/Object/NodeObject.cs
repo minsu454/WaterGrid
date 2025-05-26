@@ -1,3 +1,4 @@
+using System;
 using TMPro;
 using UnityEngine;
 
@@ -67,7 +68,9 @@ public abstract class NodeObject : MonoBehaviour, Interactionable
 
     public void Init()
     {
-        AreaTr.localScale = new Vector2(radius, radius);
+        if(AreaTr != null)
+            AreaTr.localScale = new Vector2(radius, radius);
+
         SetIsConnectTopObject(isTopObject);
         SetText();
     }

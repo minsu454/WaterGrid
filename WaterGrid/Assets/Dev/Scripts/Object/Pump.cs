@@ -1,10 +1,13 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
-public class Pump : NodeObject
+public class Pump : NodeObject, IObjectPoolable<Pump>
 {
+    public event Action<Pump> ReturnEvent;
+
     public override bool IsConnectCost(NodeObject linkedObject)
     {
         int temp = curConnectCost + linkedObject.MyCost;
@@ -54,5 +57,10 @@ public class Pump : NodeObject
     {
         maxConnectCost += upgradeCount;
         SetText();
+    }
+
+    private void OnDisable()
+    {
+        ReturnEvent.Invoke(this);
     }
 }

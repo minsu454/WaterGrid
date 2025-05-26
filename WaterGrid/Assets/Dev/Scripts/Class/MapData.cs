@@ -5,11 +5,12 @@ using System.Collections.Generic;
 /// 맵 데이터
 /// </summary>
 [Serializable]
-public class LoadMapData : ILoadDatable
+public class MapData : ILoadDatable
 {
     public string Name;
     public int Width;
     public int Height;
+    public int totalValue;
     public List<TileData> TileDataList;
     public List<AreaData> areaDataList;
 

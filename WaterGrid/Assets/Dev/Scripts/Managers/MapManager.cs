@@ -1,5 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
+using Common.Pool;
+using Common.Save;
 using UnityEngine;
 
 public sealed class MapManager : MonoBehaviour
@@ -10,6 +10,16 @@ public sealed class MapManager : MonoBehaviour
 
     public static NodeManager Node { get { return Instance.nodeManager; } }
 
+    private readonly string path = $"{Application.streamingAssetsPath}/MapData/Map_1.json";
+
+    [SerializeField] private GameObject housePrefab;
+    [SerializeField] private GameObject pumpPrefab;
+    [SerializeField] private GameObject waterPrefab;
+
+    [SerializeField] private GameObject linePrefab;
+
+    [SerializeField] private Grid hexGrid;
+
     private void Awake()
     {
         Instance = this;
@@ -18,7 +28,9 @@ public sealed class MapManager : MonoBehaviour
 
     public void Init()
     {
-
+        MapData mapData = SaveService.Load<MapData>(path);
+        
+        nodeManager.Init(linePrefab, housePrefab, pumpPrefab, waterPrefab, hexGrid, mapData.TileDataList);
     }
 
     private void Update()

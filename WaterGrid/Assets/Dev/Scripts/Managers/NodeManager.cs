@@ -5,7 +5,8 @@ using UnityEngine;
 
 public sealed class NodeManager
 {
-    private NodeContainer _container = new NodeContainer();
+    private LineContainer _lineContainer = new();
+    private NodeContainer _nodeContainer = new();
 
     private Line tempLine;                                      //임시 라인
     private Interactionable tempInteractionable;                //선택 
@@ -15,6 +16,12 @@ public sealed class NodeManager
     }
 
     public event Action<int, Vector2> lineUpdateEvent;          //라인위치 업데이트 이벤트
+
+    public void Init(GameObject linePrefab, GameObject housePrefab, GameObject pumpPrefab, GameObject waterPrefab, Grid hexGrid, List<TileData> tileDataList)
+    {
+        _lineContainer.Init(linePrefab);
+        _nodeContainer.Init(housePrefab, pumpPrefab, waterPrefab, hexGrid, tileDataList);
+    }
 
     public void OnUpdate()
     {
@@ -49,7 +56,7 @@ public sealed class NodeManager
 
         if ((PhysicsEx.IsPointInCircle(parent.transform.position, parent.Radius, children.transform.position) is false
             && parent.Type != children.Type)
-             || _container.Contains(parent, children))
+             || _lineContainer.Contains(parent, children))
         {
             DeleteLine();
             return;
@@ -68,7 +75,7 @@ public sealed class NodeManager
         if (children.ParentNodeObject == null)
             return;
 
-        Line line = _container.Remove(children.ParentNodeObject, children);
+        Line line = _lineContainer.Remove(children.ParentNodeObject, children);
         line.Disconnect();
     }
 
@@ -78,7 +85,7 @@ public sealed class NodeManager
     private void SetConnectTopObject(NodeObject parent, NodeObject children, bool value)
     {
         children.SetIsConnectTopObject(value);
-        if (_container.TryGetValue(children, out List<(NodeObject key, Line value)> tupleList) is false)
+        if (_lineContainer.TryGetValue(children, out List<(NodeObject key, Line value)> tupleList) is false)
             return;
 
         foreach (var tuple in tupleList)
@@ -92,7 +99,7 @@ public sealed class NodeManager
     /// </summary>
     public void CreateLine(NodeObject firstObj)
     {
-        tempLine = GameManager.instance.lineObjectPool.GetObject();
+        tempLine = _lineContainer.GetObject;
 
         tempLine.TempConnect(firstObj.transform);
         lineUpdateEvent += tempLine.OnUpdate;
@@ -129,7 +136,7 @@ public sealed class NodeManager
     public void ConnectLine(NodeObject parent, NodeObject children)
     {
         tempLine.Connect(parent, children);
-        _container.Add(parent, children, tempLine);
+        _lineContainer.Add(parent, children, tempLine);
 
         if (parent.IsConnectTopObject is true)
         {
@@ -149,7 +156,7 @@ public sealed class NodeManager
     /// </summary>
     public void DisconnectLine(NodeObject parent, NodeObject children)
     {
-        _container.Remove(parent, children);
+        _lineContainer.Remove(parent, children);
         SetConnectTopObject(parent, children, false);
         DeleteLine();
     }
@@ -173,7 +180,7 @@ public sealed class NodeManager
     /// </summary>
     public void ChangeTempLine(NodeObject curParent, NodeObject children, NodeObject tempParent)
     {
-        _container.Remove(curParent, children);
+        _lineContainer.Remove(curParent, children);
         SetConnectTopObject(curParent, children, false);
         tempInteractionable = tempParent;
         tempLine.TempConnect(tempParent.transform);
@@ -209,3 +216,4 @@ public sealed class NodeManager
         return true;
     }
 }
+
