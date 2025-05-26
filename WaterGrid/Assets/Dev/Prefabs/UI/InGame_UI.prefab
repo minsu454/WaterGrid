@@ -1354,7 +1354,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   clockwiseRectTr: {fileID: 276562386674166078}
-  speed: 20
+  duration: 15
 --- !u!114 &325028281154101215
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -5,6 +5,11 @@ public class InGame_UI : BaseSceneUI
 {
     [SerializeField] private ClockUI clockUI;
 
+    private void Awake()
+    {
+        Init();
+    }
+
     public override void Init()
     {
         base.Init();
