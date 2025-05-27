@@ -183,5 +183,3 @@ namespace Common.Pool
         }
     }
 }
-
-
