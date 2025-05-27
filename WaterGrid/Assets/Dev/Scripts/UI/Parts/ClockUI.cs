@@ -40,4 +40,9 @@ public class ClockUI : MonoBehaviour
     {
         TimeType.InGame.SetTime(1f);
     }
+
+    public void On2xSpeed()
+    {
+        TimeType.InGame.SetTime(2f);
+    }
 }
