@@ -4,7 +4,7 @@ using UnityEngine;
 
 public sealed class NodeContainer
 {
-    private readonly Dictionary<TileData, NodeObject> _nodeDict = new();
+    private readonly Dictionary<Vector2Int, NodeObject> _nodeDict = new();
 
     private ObjectPool<House> housePool;
     private ObjectPool<Pump> pumpPool;
@@ -25,18 +25,18 @@ public sealed class NodeContainer
 
         foreach (TileData tileData in tileDataList)
         {
-            Add(tileData);
+            Add(tileData.Position, tileData.TileType);
         }
     }
 
     /// <summary>
     /// 노드 추가 함수
     /// </summary>
-    public void Add(TileData data)
+    public void Add(Vector2Int data, TileType type = TileType.House)
     {
         NodeObject node = default;
 
-        switch (data.TileType)
+        switch (type)
         {
             case TileType.House:
                 node = housePool.GetObject();
@@ -52,14 +52,14 @@ public sealed class NodeContainer
         }
              
         node.gameObject.SetActive(true);
-        node.transform.position = hexGrid.CellToWorld((Vector3Int)data.Position);
+        node.transform.position = hexGrid.CellToWorld((Vector3Int)data);
         _nodeDict.Add(data, node);
     }
 
     /// <summary>
     /// 노드 삭제 함수
     /// </summary>
-    public void Remove(TileData data)
+    public void Remove(Vector2Int data)
     {
         if (TryGetValue(data, out NodeObject node) is false)
         {
@@ -74,7 +74,7 @@ public sealed class NodeContainer
     /// <summary>
     /// 노드가 포함되어 있는지 체크 함수
     /// </summary>
-    public bool ContainsKey(TileData data)
+    public bool ContainsKey(Vector2Int data)
     {
         return _nodeDict.ContainsKey(data);
     }
@@ -82,7 +82,7 @@ public sealed class NodeContainer
     /// <summary>
     /// 노드가 포함되어 있는지 체크 함수
     /// </summary>
-    public bool TryGetValue(TileData data, out NodeObject node)
+    public bool TryGetValue(Vector2Int data, out NodeObject node)
     {
         return _nodeDict.TryGetValue(data, out node);
     }

@@ -3,11 +3,10 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public sealed class NodeManager
+public sealed class LineManager
 {
     private LineContainer _lineContainer = new();
-    private NodeContainer _nodeContainer = new();
-
+    
     private Line tempLine;                                      //임시 라인
     private Interactionable tempInteractionable;                //선택 
     public Interactionable TempInteractionable
@@ -17,10 +16,9 @@ public sealed class NodeManager
 
     public event Action<int, Vector2> lineUpdateEvent;          //라인위치 업데이트 이벤트
 
-    public void Init(GameObject linePrefab, GameObject housePrefab, GameObject pumpPrefab, GameObject waterPrefab, Grid hexGrid, List<TileData> tileDataList)
+    public void Init(GameObject linePrefab)
     {
         _lineContainer.Init(linePrefab);
-        _nodeContainer.Init(housePrefab, pumpPrefab, waterPrefab, hexGrid, tileDataList);
     }
 
     public void OnUpdate()
@@ -35,7 +33,7 @@ public sealed class NodeManager
     {
         if (tempLine == null || (tempInteractionable is NodeObject) is false)
         {
-            DeleteLine();
+            DeleteTempLine();
             return;
         }
 
@@ -44,7 +42,7 @@ public sealed class NodeManager
 
         if (parent == children || parent.CanConnect(children) is false)
         {
-            DeleteLine();
+            DeleteTempLine();
             return;
         }
 
@@ -58,13 +56,13 @@ public sealed class NodeManager
             && parent.Type != children.Type)
              || _lineContainer.Contains(parent, children))
         {
-            DeleteLine();
+            DeleteTempLine();
             return;
         }
 
         HaveParentInChildren(children);
 
-        ConnectLine(parent, children);
+        ConnectTempLine(parent, children);
     }
 
     /// <summary>
@@ -95,9 +93,9 @@ public sealed class NodeManager
     }
 
     /// <summary>
-    /// 노드 연결 선 제작 함수
+    /// 임시 라인 제작 함수
     /// </summary>
-    public void CreateLine(NodeObject firstObj)
+    public void CreateTempLine(NodeObject firstObj)
     {
         tempLine = _lineContainer.GetObject;
 
@@ -109,9 +107,9 @@ public sealed class NodeManager
     }
 
     /// <summary>
-    /// 라인 클릭시 라인 잡고 있는 함수
+    /// 임시 라인 클릭시 라인 잡고 있는 함수
     /// </summary>
-    public void SetLine(Line line)
+    public void SetTempLine(Line line)
     {
         tempLine = line;
         lineUpdateEvent += tempLine.OnUpdate;
@@ -120,9 +118,9 @@ public sealed class NodeManager
     }
 
     /// <summary>
-    /// 라인 선택 취소 함수
+    /// 임시 라인 선택 취소 함수
     /// </summary>
-    public void CancelLine(Line line)
+    public void CancelTempLine(Line line)
     {
         line.Cancel();
         lineUpdateEvent -= tempLine.OnUpdate;
@@ -131,9 +129,9 @@ public sealed class NodeManager
     }
 
     /// <summary>
-    /// 라인 연결 함수
+    /// 임시 라인 연결 함수
     /// </summary>
-    public void ConnectLine(NodeObject parent, NodeObject children)
+    public void ConnectTempLine(NodeObject parent, NodeObject children)
     {
         tempLine.Connect(parent, children);
         _lineContainer.Add(parent, children, tempLine);
@@ -152,19 +150,29 @@ public sealed class NodeManager
     }
 
     /// <summary>
+    /// 임시 라인 연결 해제 함수
+    /// </summary>
+    public void DisconnectTempLine(NodeObject parent, NodeObject children)
+    {
+        _lineContainer.Remove(parent, children);
+        SetConnectTopObject(parent, children, false);
+        DeleteTempLine();
+    }
+
+    /// <summary>
     /// 라인 연결 해제 함수
     /// </summary>
     public void DisconnectLine(NodeObject parent, NodeObject children)
     {
-        _lineContainer.Remove(parent, children);
+        Line line = _lineContainer.Remove(parent, children);
+        line.Disconnect();
         SetConnectTopObject(parent, children, false);
-        DeleteLine();
     }
 
     /// <summary>
     /// 임시 선 삭제 함수
     /// </summary>
-    public void DeleteLine()
+    public void DeleteTempLine()
     {
         if (tempLine == null)
             return;

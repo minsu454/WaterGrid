@@ -7,9 +7,9 @@ public class Water : NodeObject, IObjectPoolable<Water>
 {
     public event Action<Water> ReturnEvent;
 
-    public override bool IsConnectCost(NodeObject linkedObject)
+    public override bool IsConnectCost(int cost)
     {
-        int temp = curConnectCost + linkedObject.MyCost;
+        int temp = curConnectCost + cost;
 
         if (temp > MaxConnectCost)
             return false;
@@ -49,5 +49,10 @@ public class Water : NodeObject, IObjectPoolable<Water>
     private void OnDisable()
     {
         ReturnEvent.Invoke(this);
+    }
+
+    public override void Upgrade(int count)
+    {
+        
     }
 }

@@ -11,6 +11,9 @@ public static class SceneEditorManager
         if (brforeScene.IsValid())
             return;
 
+        if (EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo() is false)
+            return;
+
         brforeScenePath = EditorSceneManager.GetActiveScene().path;
         brforeScene = EditorSceneManager.OpenScene(path);
     }

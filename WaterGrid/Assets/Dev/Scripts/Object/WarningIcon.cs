@@ -7,7 +7,7 @@ public class WarningIcon : MonoBehaviour, IObjectPoolable<WarningIcon>
     [SerializeField] private Vector3 offsetVec = new Vector3(-0.4f, 0.6f, 2);
     [SerializeField] private SpriteRenderer FillAmountRenderer;     //감지바 랜더러
 
-    [SerializeField] private float curCount = 0;
+    private float curCount = 0;
     [SerializeField] private float maxCount;
 
     private IWarningable warningable = null;

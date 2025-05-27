@@ -8,9 +8,9 @@ public class Pump : NodeObject, IObjectPoolable<Pump>
 {
     public event Action<Pump> ReturnEvent;
 
-    public override bool IsConnectCost(NodeObject linkedObject)
+    public override bool IsConnectCost(int cost)
     {
-        int temp = curConnectCost + linkedObject.MyCost;
+        int temp = curConnectCost + cost;
 
         if (temp > MaxConnectCost)
             return false;
@@ -53,9 +53,9 @@ public class Pump : NodeObject, IObjectPoolable<Pump>
         costText.text = $"{CurConnectCost} / {MaxConnectCost}";
     }
 
-    public void Upgrade(int upgradeCount)
+    public override void Upgrade(int count)
     {
-        maxConnectCost += upgradeCount;
+        maxConnectCost += count;
         SetText();
     }
 

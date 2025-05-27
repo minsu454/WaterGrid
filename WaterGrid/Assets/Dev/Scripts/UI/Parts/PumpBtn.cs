@@ -1,10 +1,17 @@
-using System.Collections;
-using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
 public class PumpBtn : ButtonUI
 {
+    [SerializeField] private int useCount;
+    [SerializeField] private TextMeshProUGUI text;
+
+    public override void Init()
+    {
+        SetUseText();
+    }
+
     public override void OnPointerDown(PointerEventData eventData)
     {
         base.OnPointerDown(eventData);
@@ -20,5 +27,10 @@ public class PumpBtn : ButtonUI
     protected override void OnCompleted()
     {
 
+    }
+
+    private void SetUseText()
+    {
+        text.text = useCount.ToString();
     }
 }

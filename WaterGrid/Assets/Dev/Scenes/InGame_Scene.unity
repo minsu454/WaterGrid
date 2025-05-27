@@ -337,6 +337,17 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &982944022 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7131584233240197221, guid: d22e65d5374c9e54dab06c9a1ea11e50, type: 3}
+  m_PrefabInstance: {fileID: 1075980695}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1ae2ea7b87c54494897cd3146581391d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1072899561
 GameObject:
   m_ObjectHideFlags: 0
@@ -442,6 +453,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: InGame_UI
       objectReference: {fileID: 0}
+    - target: {fileID: 4152763665312327497, guid: d22e65d5374c9e54dab06c9a1ea11e50, type: 3}
+      propertyPath: PumpBtn
+      value: 
+      objectReference: {fileID: 982944022}
+    - target: {fileID: 4152763665312327497, guid: d22e65d5374c9e54dab06c9a1ea11e50, type: 3}
+      propertyPath: hammerBtn
+      value: 
+      objectReference: {fileID: 1650612093}
     - target: {fileID: 8167439621656887622, guid: d22e65d5374c9e54dab06c9a1ea11e50, type: 3}
       propertyPath: m_Pivot.x
       value: 0
@@ -589,6 +608,17 @@ MonoBehaviour:
   waterPrefab: {fileID: 7332887563720228388, guid: 62690248be8610b49915f7b549290a65, type: 3}
   linePrefab: {fileID: 5231829555340370988, guid: fca000b32dc970e49a321826ed218926, type: 3}
   hexGrid: {fileID: 1178246128}
+--- !u!114 &1650612093 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2777085823927478225, guid: d22e65d5374c9e54dab06c9a1ea11e50, type: 3}
+  m_PrefabInstance: {fileID: 1075980695}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: afd14424419e76644884907b81f9a97d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2108088017
 GameObject:
   m_ObjectHideFlags: 0
@@ -619,6 +649,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   baseIcon: {fileID: 7211629415118020332, guid: 1753f98b12e6da34db5439a47de5b03b, type: 3}
+  timeSpeed: 5
 --- !u!4 &2108088019
 Transform:
   m_ObjectHideFlags: 0

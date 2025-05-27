@@ -28,7 +28,7 @@ public class ClockUI : MonoBehaviour
 
     private void OnCompleted()
     {
-        Debug.Log("하루가 지났당");
+        MapManager.Instance.UpgradeMap();
     }
 
     public void OnPause()

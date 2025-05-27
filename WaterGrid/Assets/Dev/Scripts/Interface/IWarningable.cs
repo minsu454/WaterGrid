@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 /// <summary>
-/// Addressable로 데이터 받는 친구들 인터페이스
+/// 위험아이콘을 들고 있는 인터페이스
 /// </summary>
 public interface IWarningable
 {

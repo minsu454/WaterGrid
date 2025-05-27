@@ -11,10 +11,12 @@ public abstract class ButtonUI : MonoBehaviour, IPointerDownHandler, IPointerUpH
     [SerializeField] protected DragUI dragUI;
     [SerializeField] protected Sprite sprite;
 
-/// <summary>
-/// 버튼을 눌렀을 때
-/// </summary>
-public virtual void OnPointerDown(PointerEventData eventData)
+    public abstract void Init();
+
+    /// <summary>
+    /// 버튼을 눌렀을 때
+    /// </summary>
+    public virtual void OnPointerDown(PointerEventData eventData)
     {
         InputManager.Instance.isUIPress = true;
 

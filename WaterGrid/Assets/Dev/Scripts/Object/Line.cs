@@ -96,21 +96,21 @@ public class Line : MonoBehaviour, IObjectPoolable<Line>, Interactionable
         lineRenderer.positionCount = 3;
         OnUpdate(2, lineRenderer.GetPosition(1));
 
-        MapManager.Node.SetLine(this);
+        MapManager.Line.SetTempLine(this);
     }
 
     public void Pressed()
     {
-        if (MapManager.Node.GetSelected(out Interactionable interactionable) is false)
+        if (MapManager.Line.GetSelected(out Interactionable interactionable) is false)
             return;
 
         if (interactionable.Equals(parentNodeObject) is true)
         {
-            MapManager.Node.ChangeTempLine(parentNodeObject, childrenNodeObject, childrenNodeObject);
+            MapManager.Line.ChangeTempLine(parentNodeObject, childrenNodeObject, childrenNodeObject);
         }
         else if (interactionable.Equals(childrenNodeObject) is true)
         {
-            MapManager.Node.ChangeTempLine(parentNodeObject, childrenNodeObject, parentNodeObject);
+            MapManager.Line.ChangeTempLine(parentNodeObject, childrenNodeObject, parentNodeObject);
         }
         else
         {
@@ -121,6 +121,6 @@ public class Line : MonoBehaviour, IObjectPoolable<Line>, Interactionable
 
     public void Canceled()
     {
-        MapManager.Node.DeleteLine();
+        MapManager.Line.DeleteTempLine();
     }
 }

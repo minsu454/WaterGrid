@@ -5,7 +5,7 @@ using UnityEngine;
 
 public sealed class LineContainer
 {
-    private readonly Dictionary<NodeObject, List<(NodeObject key, Line value)>> _lineDict = new Dictionary<NodeObject, List<(NodeObject key, Line value)>>();
+    private readonly Dictionary<NodeObject, List<(NodeObject key, Line value)>> _lineDict = new();
 
     private ObjectPool<Line> linePool;
     public Line GetObject
@@ -22,7 +22,7 @@ public sealed class LineContainer
     }
 
     /// <summary>
-    /// 노드 추가 함수
+    /// 라인 추가 함수
     /// </summary>
     public void Add(NodeObject parent, NodeObject children, Line line)
     {
@@ -41,7 +41,7 @@ public sealed class LineContainer
     }
 
     /// <summary>
-    /// 노드 삭제 함수
+    /// 라인 삭제 함수
     /// </summary>
     public Line Remove(NodeObject parent, NodeObject children)
     {

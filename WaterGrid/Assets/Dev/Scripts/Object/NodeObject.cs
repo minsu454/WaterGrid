@@ -7,19 +7,19 @@ using UnityEngine;
 public abstract class NodeObject : MonoBehaviour, Interactionable
 {
     [Header("MyObject")]
-    [SerializeField] private TileType myType;             //내 타입
+    [SerializeField] private TileType myType;               //내 타입
     public TileType Type
     {
         get { return myType; }
     }
-    [SerializeField] private int myCost;                        //내 비용
+    [SerializeField] protected int myCost;                  //내 비용
     public int MyCost
     {
         get { return myCost; }
     }
 
     [SerializeField] private bool isTopObject = false;          //최상위 객체인지 확인 값
-    [SerializeField] private bool isConnectTopObject = false; //최상위 객체와 연결되어 있는지 확인 값
+    [SerializeField] private bool isConnectTopObject = false;   //최상위 객체와 연결되어 있는지 확인 값
     public bool IsConnectTopObject
     {
         get { return isConnectTopObject; }
@@ -80,7 +80,7 @@ public abstract class NodeObject : MonoBehaviour, Interactionable
     /// </summary>
     public bool CanConnect(NodeObject linkedObject)
     {
-        return linkedObject.ConnectType.HasFlag(myType) && connectType.HasFlag(linkedObject.Type) && IsConnectCost(linkedObject) && linkedObject.IsConnectCost(this);
+        return linkedObject.ConnectType.HasFlag(myType) && connectType.HasFlag(linkedObject.Type) && IsConnectCost(linkedObject.MyCost) && linkedObject.IsConnectCost(MyCost);
     }
 
     /// <summary>
@@ -94,7 +94,7 @@ public abstract class NodeObject : MonoBehaviour, Interactionable
     /// <summary>
     /// 연결 시 필요한 요구 코스트가 충족되는지 반환 함수
     /// </summary>
-    public abstract bool IsConnectCost(NodeObject linkedObject);
+    public abstract bool IsConnectCost(int cost);
 
     /// <summary>
     /// 연결 시 호출 이벤트 함수
@@ -116,6 +116,8 @@ public abstract class NodeObject : MonoBehaviour, Interactionable
     /// </summary>
     public abstract void OnDisconnectLineChildren(int cost);
 
+    public abstract void Upgrade(int count);
+
     /// <summary>
     /// 텍스트 설정 함수
     /// </summary>
@@ -123,7 +125,7 @@ public abstract class NodeObject : MonoBehaviour, Interactionable
 
     public void Performed()
     {
-        MapManager.Node.CreateLine(this);
+        MapManager.Line.CreateTempLine(this);
     }
 
     public void Pressed()
@@ -133,6 +135,6 @@ public abstract class NodeObject : MonoBehaviour, Interactionable
 
     public void Canceled()
     {
-        MapManager.Node.TryAdd(this);
+        MapManager.Line.TryAdd(this);
     }
 }

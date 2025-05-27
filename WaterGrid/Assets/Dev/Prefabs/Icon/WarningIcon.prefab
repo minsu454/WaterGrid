@@ -131,5 +131,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   offsetVec: {x: -0.3, y: 0.3, z: 2}
   FillAmountRenderer: {fileID: 3396887920993616733}
-  curCount: 0
-  maxCount: 20
+  maxCount: 80

@@ -1,11 +1,11 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.InteropServices.WindowsRuntime;
 using UnityEngine;
 
 public class House : NodeObject, IWarningable, IObjectPoolable<House>
 {
-
     [Header("House")]
     [SerializeField] private SpriteOutline outline;
     public SpriteOutline Outline { get { return outline; } }
@@ -15,7 +15,7 @@ public class House : NodeObject, IWarningable, IObjectPoolable<House>
 
     public event Action<House> ReturnEvent;
 
-    public override bool IsConnectCost(NodeObject linkedObject)
+    public override bool IsConnectCost(int cost)
     {
         return true;
     }
@@ -68,6 +68,25 @@ public class House : NodeObject, IWarningable, IObjectPoolable<House>
         costText.text = $"{MyCost}";
     }
 
+    public override void Upgrade(int count)
+    {
+        if (parentNodeObject == null)
+        {
+
+        }
+        else if (parentNodeObject.IsConnectCost(count) is true)
+        {
+            parentNodeObject.OnConnectLineChildren(count);
+        }
+        else
+        {
+            MapManager.Line.DisconnectLine(parentNodeObject, this);
+        }
+
+        myCost += count;
+        SetText();
+    }
+
     public void SetOutLineAlpha(float value)
     {
         outline.color.a = value;
@@ -77,4 +96,6 @@ public class House : NodeObject, IWarningable, IObjectPoolable<House>
     {
         ReturnEvent.Invoke(this);
     }
+
+    
 }
