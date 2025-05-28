@@ -25,5 +25,10 @@ public class UIGridLayout : MonoBehaviour
         gridLayout.cellSize = CellSize;
         gridLayout.spacing = Spacing;
         gridLayout.startAxis = axis;
+
+        foreach (var btn in _btnList)
+        {
+            btn.Init();
+        }
     }
 }

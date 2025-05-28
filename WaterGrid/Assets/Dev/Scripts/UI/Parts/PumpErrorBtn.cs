@@ -2,11 +2,6 @@ using UnityEngine.EventSystems;
 
 public class PumpErrorBtn : UIButton
 {
-    public override void Init()
-    {
-
-    }
-
     public override void OnPointerDown(PointerEventData eventData)
     {
         OnCompleted();

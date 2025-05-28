@@ -6,6 +6,7 @@ public class PumpBtn : UIDragButton
 {
     public override void Init()
     {
+        base.Init();
         SetUseText();
     }
 

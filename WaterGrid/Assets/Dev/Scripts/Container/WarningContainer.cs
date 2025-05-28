@@ -2,36 +2,49 @@ using System.Collections.Generic;
 
 public sealed class WarningContainer
 {
-    private readonly List<IWarningable> _warningableList = new List<IWarningable>();        //위험 아이콘이 붙은 리스트
+    private readonly Dictionary<string, List<IWarningable>> _warningableDict = new();        //위험 아이콘이 붙은 리스트
 
     /// <summary>
     /// 리스트에 추가 함수
     /// </summary>
-    public void Add(IWarningable warningable)
+    public void Add(string name, IWarningable warningable)
     {
-        if (Contains(warningable) is true)
+        if (TryGetValue(name, out List<IWarningable> warningableList) is true)
+        {
+            _warningableDict[name].Add(warningable);
             return;
+        }
 
-        _warningableList.Add(warningable);
+        _warningableDict.Add(name, new List<IWarningable>() { warningable });
     }
 
     /// <summary>
     /// 리스트에 삭제 함수
     /// </summary>
-    public void Remove(IWarningable warningable)
+    public void Remove(string name, IWarningable warningable)
     {
-        if (Contains(warningable) is false)
+        if (TryGetValue(name, out List<IWarningable> warningableList) is false || warningableList.Contains(warningable))
+        {
             return;
+        }
 
-        _warningableList.Remove(warningable);
+        warningableList.Remove(warningable);
+
+        if(warningableList.Count == 0)
+            _warningableDict.Remove(name);
     }
 
     /// <summary>
     /// 리스트에 검색 함수
     /// </summary>
-    public bool Contains(IWarningable warningable)
+    public bool Contains(string name)
     {
-        return _warningableList.Contains(warningable);
+        return _warningableDict.ContainsKey(name);
+    }
+
+    public bool TryGetValue(string name, out List<IWarningable> warningableList)
+    {
+        return _warningableDict.TryGetValue(name, out warningableList);
     }
 
     /// <summary>
@@ -39,9 +52,12 @@ public sealed class WarningContainer
     /// </summary>
     public void SetOutLines(float value)
     {
-        for (int i = _warningableList.Count - 1; i >= 0; i--)
+        foreach (KeyValuePair<string, List<IWarningable>> warningablePair in _warningableDict)
         {
-            _warningableList[i].SetOutLineAlpha(value);
+            for (int i = warningablePair.Value.Count - 1; i >= 0; i--)
+            {
+                warningablePair.Value[i].SetOutLineAlpha(value);
+            }
         }
     }
 }

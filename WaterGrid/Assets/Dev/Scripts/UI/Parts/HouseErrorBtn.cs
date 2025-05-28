@@ -6,11 +6,6 @@ using UnityEngine.EventSystems;
 
 public class HouseErrorBtn : UIButton
 {
-    public override void Init()
-    {
-        
-    }
-
     public override void OnPointerDown(PointerEventData eventData)
     {
         OnCompleted();

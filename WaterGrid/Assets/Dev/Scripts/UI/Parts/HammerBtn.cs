@@ -9,12 +9,13 @@ public class HammerBtn : UIDragButton
 
     public override void Init()
     {
+        base.Init();
         SetUseText();
     }
 
     public override void OnPointerDown(PointerEventData eventData)
     {
-        if (count == 0)
+        if (Count == 0)
             return;
 
         base.OnPointerDown(eventData);
@@ -22,7 +23,7 @@ public class HammerBtn : UIDragButton
 
     public override void OnPointerUp(PointerEventData eventData)
     {
-        if (count == 0)
+        if (Count == 0)
             return;
 
         base.OnPointerUp(eventData);
@@ -38,13 +39,8 @@ public class HammerBtn : UIDragButton
             Pump pump = (Pump)interaction;
 
             pump.Upgrade(upgradeCount);
-            count--;
+            Count--;
             SetUseText();
         }
-    }
-
-    private void SetUseText()
-    {
-        text.text = count.ToString();
     }
 }

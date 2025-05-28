@@ -6,8 +6,6 @@ public class InGame_UI : BaseSceneUI
     [SerializeField] private ClockUI clockUI;
     [SerializeField] private UIGridLayout errorlayout;
     [SerializeField] private UIGridLayout uselayout;
-    [SerializeField] private UIDragButton hammerBtn;
-    [SerializeField] private UIDragButton PumpBtn;
 
     private void Awake()
     {
@@ -19,8 +17,6 @@ public class InGame_UI : BaseSceneUI
         base.Init();
 
         clockUI.Init();
-        hammerBtn.Init();
-        PumpBtn.Init();
         errorlayout.Init();
         uselayout.Init();
     }

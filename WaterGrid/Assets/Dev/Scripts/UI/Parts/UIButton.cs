@@ -5,10 +5,26 @@ using UnityEngine.EventSystems;
 public abstract class UIButton : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 {
     [Header(nameof(UIButton))]
-    [SerializeField] protected int count;
+    [SerializeField] private int count;
+    public int Count
+    {
+        get { return count; }
+
+        set
+        {
+            count = value;
+
+            if (Count == 0)
+                gameObject.SetActive(false);
+        }
+    }
+
     [SerializeField] protected TextMeshProUGUI text;
 
-    public abstract void Init();
+    public virtual void Init()
+    {
+        Count = count;
+    }
 
     public abstract void OnPointerDown(PointerEventData eventData);
 
