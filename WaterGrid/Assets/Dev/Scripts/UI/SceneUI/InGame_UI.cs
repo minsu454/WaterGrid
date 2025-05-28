@@ -4,8 +4,10 @@ using UnityEngine;
 public class InGame_UI : BaseSceneUI
 {
     [SerializeField] private ClockUI clockUI;
-    [SerializeField] private ButtonUI hammerBtn;
-    [SerializeField] private ButtonUI PumpBtn;
+    [SerializeField] private UIGridLayout errorlayout;
+    [SerializeField] private UIGridLayout uselayout;
+    [SerializeField] private UIDragButton hammerBtn;
+    [SerializeField] private UIDragButton PumpBtn;
 
     private void Awake()
     {
@@ -19,6 +21,8 @@ public class InGame_UI : BaseSceneUI
         clockUI.Init();
         hammerBtn.Init();
         PumpBtn.Init();
+        errorlayout.Init();
+        uselayout.Init();
     }
 
     public void Btn()

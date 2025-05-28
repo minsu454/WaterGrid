@@ -1,22 +1,18 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public abstract class ButtonUI : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
+public abstract class UIDragButton : UIButton
 {
     protected event Action UpdateEvent;
-    [SerializeField] protected DragUI dragUI;
+    [SerializeField] protected UIDrag dragUI;
     [SerializeField] protected Sprite sprite;
-
-    public abstract void Init();
 
     /// <summary>
     /// 버튼을 눌렀을 때
     /// </summary>
-    public virtual void OnPointerDown(PointerEventData eventData)
+    public override void OnPointerDown(PointerEventData eventData)
     {
         InputManager.Instance.isUIPress = true;
 
@@ -27,7 +23,7 @@ public abstract class ButtonUI : MonoBehaviour, IPointerDownHandler, IPointerUpH
     /// <summary>
     /// 버튼을 땠을 때
     /// </summary>
-    public virtual void OnPointerUp(PointerEventData eventData)
+    public override void OnPointerUp(PointerEventData eventData)
     {
         dragUI.Hide();
         UpdateEvent -= OnUpdate;

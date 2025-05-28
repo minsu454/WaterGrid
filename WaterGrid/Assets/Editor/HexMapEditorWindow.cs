@@ -27,6 +27,7 @@ public class HexMapEditorWindow : CustomWindow<HexMapEditorWindow>
     private List<AreaData> _areaList = new List<AreaData>();
     private string newAreaName = "NewArea";
     private Color newAreaColor = Color.green;
+    private Vector2 minBound, maxBound;
 
     private int selectedAreaIndex = -1; // 리스트에서 선택된 항목
     private Vector2 AreaScrollPos;
@@ -291,6 +292,65 @@ public class HexMapEditorWindow : CustomWindow<HexMapEditorWindow>
                     GUIParts.DrawIcon(worldPos, _texture2DDict[_hexDict[coord].type]);
             }
         }
+
+        {
+            qOffset = -gridWidth / 2;
+            rOffset = -gridHeight / 2;
+
+            List<Vector2> worldPositions = new();
+
+            for (int r = 0; r < gridHeight; r++)
+            {
+                for (int q = 0; q < gridWidth; q++)
+                {
+                    int qr = q + qOffset;
+                    int rr = r + rOffset;
+
+                    Vector2 worldPos;
+
+                    if (rr % 2 != 0 && rr < 0)
+                    {
+                        qr += 1;
+                        worldPos = HexUtility.HexToWorld2D(qr, rr, tileSize);
+                        qr -= 1;
+                    }
+                    else
+                    {
+                        worldPos = HexUtility.HexToWorld2D(qr, rr, tileSize);
+                    }
+
+                    worldPositions.Add(worldPos);
+                }
+            }
+
+            if (worldPositions.Count > 0)
+            {
+                float radius = tileSize; // 외벽 반지름 보정값
+                float minX = worldPositions.Min(p => p.x) - radius;
+                float maxX = worldPositions.Max(p => p.x) + radius;
+                float minY = worldPositions.Min(p => p.y) - radius;
+                float maxY = worldPositions.Max(p => p.y) + radius;
+
+                minBound = new Vector2(minX, minY);
+                maxBound = new Vector2(maxX, maxY);
+
+                Vector3[] rect = new Vector3[]
+                {
+                    new Vector3(minX, minY, 0),
+                    new Vector3(minX, maxY, 0),
+                    new Vector3(maxX, maxY, 0),
+                    new Vector3(maxX, minY, 0),
+                    new Vector3(minX, minY, 0) // 닫기
+                };
+
+                Handles.color = new Color(1f, 0f, 1f, 0.05f); // 얇은 fill
+                Handles.DrawSolidRectangleWithOutline(rect[..4], new Color(1f, 0f, 1f, 0.05f), new Color(1f, 0f, 1f));
+
+                Handles.color = Color.magenta;
+                Handles.DrawAAPolyLine(3f, rect); // 굵은 외곽선
+            }
+        }
+
     }
 
     #endregion

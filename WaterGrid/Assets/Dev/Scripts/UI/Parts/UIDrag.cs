@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class DragUI : MonoBehaviour
+public class UIDrag : MonoBehaviour
 {
     [SerializeField] private Image image;
 

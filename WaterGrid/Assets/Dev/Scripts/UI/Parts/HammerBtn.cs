@@ -3,10 +3,8 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class HammerBtn : ButtonUI
+public class HammerBtn : UIDragButton
 {
-    [SerializeField] private int useCount;
-    [SerializeField] private TextMeshProUGUI text;
     [SerializeField] private int upgradeCount;
 
     public override void Init()
@@ -16,7 +14,7 @@ public class HammerBtn : ButtonUI
 
     public override void OnPointerDown(PointerEventData eventData)
     {
-        if (useCount == 0)
+        if (count == 0)
             return;
 
         base.OnPointerDown(eventData);
@@ -24,7 +22,7 @@ public class HammerBtn : ButtonUI
 
     public override void OnPointerUp(PointerEventData eventData)
     {
-        if (useCount == 0)
+        if (count == 0)
             return;
 
         base.OnPointerUp(eventData);
@@ -40,13 +38,13 @@ public class HammerBtn : ButtonUI
             Pump pump = (Pump)interaction;
 
             pump.Upgrade(upgradeCount);
-            useCount--;
+            count--;
             SetUseText();
         }
     }
 
     private void SetUseText()
     {
-        text.text = useCount.ToString();
+        text.text = count.ToString();
     }
 }

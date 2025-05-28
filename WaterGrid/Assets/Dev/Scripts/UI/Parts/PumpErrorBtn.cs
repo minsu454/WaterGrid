@@ -1,28 +1,24 @@
-using TMPro;
-using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class PumpBtn : UIDragButton
+public class PumpErrorBtn : UIButton
 {
     public override void Init()
     {
-        SetUseText();
+
     }
 
     public override void OnPointerDown(PointerEventData eventData)
     {
-        base.OnPointerDown(eventData);
-
+        OnCompleted();
     }
 
     public override void OnPointerUp(PointerEventData eventData)
     {
 
-        base.OnPointerUp(eventData);
     }
 
-    protected override void OnCompleted()
+    protected void OnCompleted()
     {
-
+        
     }
 }
