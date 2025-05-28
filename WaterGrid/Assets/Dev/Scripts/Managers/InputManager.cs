@@ -56,6 +56,21 @@ public sealed class InputManager : MonoBehaviour
     }
 
     /// <summary>
+    /// 카메라 움직일 시 호출 함수
+    /// </summary>
+    private void OnMove(InputAction.CallbackContext context)
+    {
+        if (context.phase == InputActionPhase.Performed)
+        {
+            CameraManager.Instance.OnMoveStart(InputScreenPoint);
+        }
+        else if (context.phase == InputActionPhase.Canceled)
+        {
+            CameraManager.Instance.OnMoveStop();
+        }
+    }
+
+    /// <summary>
     /// 키다운 시 호출 함수
     /// </summary>
     private void Performed()

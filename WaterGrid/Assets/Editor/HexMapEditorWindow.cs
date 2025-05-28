@@ -5,13 +5,60 @@ using Common.Hexagon;
 using System;
 using System.IO;
 using System.Linq;
-using static Codice.Client.Common.Servers.RecentlyUsedServers;
 
 public class HexMapEditorWindow : CustomWindow<HexMapEditorWindow>
 {
     private float tileSize = 0.5f;          //타일 사이즈
     private int gridWidth = 10;             //가로 갯수
+    public int GridWidth
+    {
+        set
+        {
+            if (gridWidth == value)
+                return;
+
+            gridWidth = value;
+            UpdateMapBound();
+        }
+    }
+
     private int gridHeight = 10;            //세로 갯수
+    public int GridHeight
+    {
+        set
+        {
+            if (gridHeight == value)
+                return;
+
+            gridHeight = value;
+            UpdateMapBound();
+        }
+    }
+
+    private float offsetX = 0f;
+    public float OffsetX
+    {
+        set
+        {
+            if (offsetX == value)
+                return;
+
+            offsetX = value;
+            UpdateMapBound();
+        }
+    }
+    private float offsetY = 0f;
+    public float OffsetY
+    {
+        set
+        {
+            if (offsetY == value)
+                return;
+
+            offsetY = value;
+            UpdateMapBound();
+        }
+    }
 
     private readonly Dictionary<Vector2Int, (int areaIdx, TileType type)> _hexDict = new();
 
@@ -27,7 +74,7 @@ public class HexMapEditorWindow : CustomWindow<HexMapEditorWindow>
     private List<AreaData> _areaList = new List<AreaData>();
     private string newAreaName = "NewArea";
     private Color newAreaColor = Color.green;
-    private Vector2 minBound, maxBound;
+    private Bounds2D mapBounds;
 
     private int selectedAreaIndex = -1; // 리스트에서 선택된 항목
     private Vector2 AreaScrollPos;
@@ -35,7 +82,7 @@ public class HexMapEditorWindow : CustomWindow<HexMapEditorWindow>
     [MenuItem("Tools/MapEditor/Create", priority = 1)]
     static void Create()
     {
-        CreateComstomWindow("Hex Map Editor", new Vector2(550f, 400f), new Vector2(550f, 400f));
+        CreateComstomWindow("Hex Map Editor", new Vector2(550f, 450f), new Vector2(550f, 450f));
     }
 
     [MenuItem("Tools/MapEditor/Load", priority = 2)]
@@ -90,9 +137,9 @@ public class HexMapEditorWindow : CustomWindow<HexMapEditorWindow>
         GUILayout.Label("Tilemap Size", EditorStyles.boldLabel);
         GUILayout.BeginHorizontal();
         GUILayout.Label("Width", GUILayout.Width(50));
-        gridWidth = EditorGUILayout.IntField(gridWidth, GUILayout.Width(60));
+        GridWidth = EditorGUILayout.IntField(gridWidth, GUILayout.Width(60));
         GUILayout.Label("Height", GUILayout.Width(50));
-        gridHeight = EditorGUILayout.IntField(gridHeight, GUILayout.Width(60));
+        GridHeight = EditorGUILayout.IntField(gridHeight, GUILayout.Width(60));
         GUILayout.FlexibleSpace();
         if (GUILayout.Button("Save", GUILayout.Width(100), GUILayout.Height(20)))
         {
@@ -100,6 +147,17 @@ public class HexMapEditorWindow : CustomWindow<HexMapEditorWindow>
             string path = EditorUtility.SaveFilePanel("Save File", "", initialFilename, "json");
             SaveData(path);
         }
+        GUILayout.EndHorizontal();
+
+        GUILayout.Label("Camera", EditorStyles.boldLabel);
+        GUILayout.BeginHorizontal();
+        GUILayout.Label("Offset X", GUILayout.Width(60));
+        OffsetX = EditorGUILayout.Slider(offsetX, 0f, 3f, GUILayout.Width(200));
+        GUILayout.EndHorizontal();
+
+        GUILayout.BeginHorizontal();
+        GUILayout.Label("Offset Y", GUILayout.Width(60));
+        OffsetY = EditorGUILayout.Slider(offsetY, 0f, 3f, GUILayout.Width(200));
         GUILayout.EndHorizontal();
 
         GUILayout.Space(10);
@@ -293,64 +351,23 @@ public class HexMapEditorWindow : CustomWindow<HexMapEditorWindow>
             }
         }
 
+        Vector2 min = mapBounds.min;
+        Vector2 max = mapBounds.max;
+
+        Vector3[] rect = new Vector3[]
         {
-            qOffset = -gridWidth / 2;
-            rOffset = -gridHeight / 2;
+        new Vector3(min.x, min.y, 0),
+        new Vector3(min.x, max.y, 0),
+        new Vector3(max.x, max.y, 0),
+        new Vector3(max.x, min.y, 0),
+        new Vector3(min.x, min.y, 0)
+        };
 
-            List<Vector2> worldPositions = new();
+        Handles.color = new Color(1f, 0f, 1f, 0.05f);
+        Handles.DrawSolidRectangleWithOutline(rect[..4], new Color(1f, 0f, 1f, 0.05f), new Color(1f, 0f, 1f));
 
-            for (int r = 0; r < gridHeight; r++)
-            {
-                for (int q = 0; q < gridWidth; q++)
-                {
-                    int qr = q + qOffset;
-                    int rr = r + rOffset;
-
-                    Vector2 worldPos;
-
-                    if (rr % 2 != 0 && rr < 0)
-                    {
-                        qr += 1;
-                        worldPos = HexUtility.HexToWorld2D(qr, rr, tileSize);
-                        qr -= 1;
-                    }
-                    else
-                    {
-                        worldPos = HexUtility.HexToWorld2D(qr, rr, tileSize);
-                    }
-
-                    worldPositions.Add(worldPos);
-                }
-            }
-
-            if (worldPositions.Count > 0)
-            {
-                float radius = tileSize; // 외벽 반지름 보정값
-                float minX = worldPositions.Min(p => p.x) - radius;
-                float maxX = worldPositions.Max(p => p.x) + radius;
-                float minY = worldPositions.Min(p => p.y) - radius;
-                float maxY = worldPositions.Max(p => p.y) + radius;
-
-                minBound = new Vector2(minX, minY);
-                maxBound = new Vector2(maxX, maxY);
-
-                Vector3[] rect = new Vector3[]
-                {
-                    new Vector3(minX, minY, 0),
-                    new Vector3(minX, maxY, 0),
-                    new Vector3(maxX, maxY, 0),
-                    new Vector3(maxX, minY, 0),
-                    new Vector3(minX, minY, 0) // 닫기
-                };
-
-                Handles.color = new Color(1f, 0f, 1f, 0.05f); // 얇은 fill
-                Handles.DrawSolidRectangleWithOutline(rect[..4], new Color(1f, 0f, 1f, 0.05f), new Color(1f, 0f, 1f));
-
-                Handles.color = Color.magenta;
-                Handles.DrawAAPolyLine(3f, rect); // 굵은 외곽선
-            }
-        }
-
+        Handles.color = Color.magenta;
+        Handles.DrawAAPolyLine(3f, rect);
     }
 
     #endregion
@@ -377,7 +394,8 @@ public class HexMapEditorWindow : CustomWindow<HexMapEditorWindow>
         loadMapData.Name = Path.GetFileNameWithoutExtension(path);
         loadMapData.Width = gridWidth;
         loadMapData.Height = gridHeight;
-        loadMapData.areaDataList = _areaList;
+        loadMapData.AreaDataList = _areaList;
+        loadMapData.Bounds = mapBounds;
         loadMapData.totalValue = Mathf.Max(1, _areaList.Sum(a => a.Weight));
 
         string json = JsonUtility.ToJson(loadMapData);
@@ -390,20 +408,63 @@ public class HexMapEditorWindow : CustomWindow<HexMapEditorWindow>
     /// </summary>
     private void LoadData()
     {
-        if (loadMapData == null)
-            return;
-
-        foreach (var data in loadMapData.TileDataList)
+        if (loadMapData != null)
         {
-            _hexDict.Add(data.Position, new(data.AreaIdx, data.TileType));
+            foreach (var data in loadMapData.TileDataList)
+            {
+                _hexDict.Add(data.Position, new(data.AreaIdx, data.TileType));
+            }
+
+            gridWidth = loadMapData.Width;
+            gridHeight = loadMapData.Height;
+            mapBounds = loadMapData.Bounds;
+            _areaList = loadMapData.AreaDataList;
         }
-        
-        gridWidth = loadMapData.Width;
-        gridHeight = loadMapData.Height;
-        _areaList = loadMapData.areaDataList;
+
+        UpdateMapBound();
     }
 
     #endregion
+
+    private void UpdateMapBound()
+    {
+        int qOffset = -gridWidth / 2;
+        int rOffset = -gridHeight / 2;
+
+        List<Vector2> worldPositions = new();
+
+        for (int r = 0; r < gridHeight; r++)
+        {
+            for (int q = 0; q < gridWidth; q++)
+            {
+                int qr = q + qOffset;
+                int rr = r + rOffset;
+
+                Vector2 worldPos;
+                if (rr % 2 != 0 && rr < 0)
+                {
+                    qr += 1;
+                    worldPos = HexUtility.HexToWorld2D(qr, rr, tileSize);
+                    qr -= 1;
+                }
+                else
+                {
+                    worldPos = HexUtility.HexToWorld2D(qr, rr, tileSize);
+                }
+
+                worldPositions.Add(worldPos);
+            }
+        }
+
+        float radius = tileSize;
+
+        float minX = worldPositions.Min(p => p.x) - radius - offsetX;
+        float maxX = worldPositions.Max(p => p.x) + radius + offsetX;
+        float minY = worldPositions.Min(p => p.y) - radius - offsetY;
+        float maxY = worldPositions.Max(p => p.y) + radius + offsetY;
+
+        mapBounds = new Bounds2D(new Vector2(minX, minY), new Vector2(maxX, maxY));
+    }
 
     #region ClickEvent
 

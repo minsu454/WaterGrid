@@ -1,6 +1,7 @@
 using Common.Pool;
 using Common.Save;
 using System.Collections.Generic;
+using UnityEditor.U2D.Aseprite;
 using UnityEngine;
 
 public sealed class MapManager : MonoBehaviour
@@ -15,6 +16,7 @@ public sealed class MapManager : MonoBehaviour
     private readonly CustomRandomList<Vector2Int> _randomList = new();
 
     private readonly string path = $"{Application.streamingAssetsPath}/MapData/Map_1.json";
+    private MapData mapData;
 
     [Header("Node")]
     [SerializeField] private GameObject housePrefab;
@@ -35,11 +37,16 @@ public sealed class MapManager : MonoBehaviour
 
     public void Init()
     {
-        MapData mapData = SaveService.Load<MapData>(path);
+        mapData = SaveService.Load<MapData>(path);
 
         _nodeContainer.Init(housePrefab, pumpPrefab, waterPrefab, hexGrid, mapData.TileDataList);
         nodeManager.Init(linePrefab);
         InitRandomList(mapData);
+    }
+
+    private void Start()
+    {
+        CameraManager.Instance.Init(mapData.Bounds);
     }
 
     private void InitRandomList(MapData mapData)
@@ -47,7 +54,7 @@ public sealed class MapManager : MonoBehaviour
         foreach (var data in mapData.TileDataList)
         {
             if (data.AreaIdx >= 0)
-                _randomList.Add(mapData.areaDataList[data.AreaIdx].Weight, data.Position);
+                _randomList.Add(mapData.AreaDataList[data.AreaIdx].Weight, data.Position);
         }
     }
 

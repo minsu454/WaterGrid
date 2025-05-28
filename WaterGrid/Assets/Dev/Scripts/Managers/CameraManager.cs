@@ -1,48 +1,86 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class CameraManager : MonoBehaviour
 {
-    public BoxCollider2D bound;
+    public static CameraManager Instance;
 
-    public Vector3 offset;
+    private Camera main;
+    private Bounds2D bounds;
 
-    private Vector3 minbound;   //박스콜라이더 영역 최소값
-    private Vector3 maxbound;   //박스콜라이더 영역 최댓값
+    private Vector2 startPos;
+    private Vector2 cameraPos;
+    private float cameraZ = -10;
+
+    [SerializeField] private float speed;
 
     private float halfWidth;    //카메라의 반 너비
     private float halfHeight;   //카메라의 반 높이
 
-    private Camera targetCamera;
+    private event Action OnLateUpdateEvent;
 
-    public bool enabledMove;
-
-    void Start()
+    private void Awake()
     {
-        targetCamera = GetComponent<Camera>();
-        minbound = bound.bounds.min;
-        maxbound = bound.bounds.max;
+        Instance = this;
+    }
+
+    public void Init(Bounds2D bounds)
+    {
+        this.bounds = bounds;
+        main = Camera.main;
+
+        SetCameraRange();
     }
 
     public void LateUpdate()
     {
-        if (enabledMove == false)
-            return;
+        OnLateUpdateEvent?.Invoke();
+    }
 
-        // 해상도 변경 대응
-        halfHeight = targetCamera.orthographicSize;
+    public void OnMoveStart(Vector2 startPos)
+    {
+        this.startPos = startPos;
+        cameraPos = main.transform.position;
+        OnLateUpdateEvent += OnLateUpdate;
+    }
+
+    public void OnMoveStop()
+    {
+        OnLateUpdateEvent -= OnLateUpdate;
+    }
+
+    private void OnLateUpdate()
+    {
+        Vector2 touchScreenPos = Camera.main.ScreenToViewportPoint(startPos - InputManager.InputScreenPoint);
+
+        touchScreenPos = cameraPos + (touchScreenPos * speed);
+
+        touchScreenPos.x = Mathf.Clamp(touchScreenPos.x, bounds.min.x + halfWidth, bounds.max.x - halfWidth);
+        touchScreenPos.y = Mathf.Clamp(touchScreenPos.y, bounds.min.y + halfHeight, bounds.max.y - halfHeight);
+
+        main.transform.position = (Vector3)touchScreenPos + (Vector3.forward * cameraZ);
+    }
+
+    public void SetCameraRange()
+    {
+        halfHeight = main.orthographicSize;
         halfWidth = halfHeight * Screen.width / Screen.height;
+    }
 
-        // 플레이어 카메라 이동
-        Vector3 targetPos = offset;
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.magenta;
 
-        targetPos.x = Mathf.Clamp(targetPos.x, minbound.x + halfWidth, maxbound.x - halfWidth);
-        targetPos.y = Mathf.Clamp(targetPos.y, minbound.y + halfHeight, maxbound.y - halfHeight);
+        Vector3 center = bounds.Center;
+        Vector3 size = bounds.Size;
 
-        targetPos = Vector3.Lerp(transform.position, targetPos, 2.5f * Time.deltaTime);
-        targetPos.z = this.transform.position.z;
+        Gizmos.DrawWireCube(center, size);
+    }
 
-        this.transform.position = targetPos;
+    private void OnDestroy()
+    {
+        Instance = null;
     }
 }
