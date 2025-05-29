@@ -32,9 +32,7 @@ namespace Common.Event
         public static void Unsubscribe(GameEventType type, EventListener listener)
         {
             if (!eventListenerDict.TryGetValue(type, out var list))
-            {
                 return;
-            }
 
             list.Remove(listener);
             if (list.Count == 0)
@@ -53,11 +51,11 @@ namespace Common.Event
                 return;
             }
 
-            foreach (var listener in list)
+            for (int i = list.Count - 1; i >= 0; i--)
             {
                 try
                 {
-                    listener.Invoke(arg);
+                    list[i].Invoke(arg);
                 }
                 catch (Exception e)
                 {

@@ -6,9 +6,6 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
 
-    public ObjectPool<WarningIcon> warningIconObjectPool;
-    public GameObject baseIcon;
-
     [Header("Dev")]
     [SerializeField] private int timeSpeed;
 
@@ -21,8 +18,6 @@ public class GameManager : MonoBehaviour
     private void Awake()
     {
         instance = this;
-
-        warningIconObjectPool = new ObjectPool<WarningIcon>(nameof(WarningIcon), baseIcon, null, 10);
 
         TimeType.InGame.SetTime(timeSpeed);
     }

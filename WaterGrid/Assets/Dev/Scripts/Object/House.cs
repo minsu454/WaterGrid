@@ -13,6 +13,9 @@ public class House : NodeObject, IWarningable, IObjectPoolable<House>
     private WarningIcon warningIcon;
     public WarningIcon Icon { get { return warningIcon; } }
 
+    private UIButtonType errorType = UIButtonType.HouseErrorBtn;
+    public UIButtonType ErrorType { get { return errorType; } }
+
     public event Action<House> ReturnEvent;
 
     public override bool IsConnectCost(int cost)
@@ -29,7 +32,7 @@ public class House : NodeObject, IWarningable, IObjectPoolable<House>
             if (warningIcon != null)
                 return;
 
-            warningIcon = GameManager.instance.warningIconObjectPool.GetObject();
+            warningIcon = WarningManager.Instance.warningIconObjectPool.GetObject();
             warningIcon.gameObject.SetActive(true);
             warningIcon.Init(this);
         }

@@ -43,8 +43,7 @@ public abstract class NodeObject : MonoBehaviour, Interactionable
         get { return maxConnectCost; }
     }
 
-    [SerializeField] private Transform AreaTr;
-
+    [SerializeField] private Transform AreaTr;                  //범위
     [SerializeField] protected int radius;                      //반지름 
     public int Radius
     {
@@ -52,7 +51,7 @@ public abstract class NodeObject : MonoBehaviour, Interactionable
     }
 
     [Header("OtherObject")]
-    [SerializeField] private TileType connectType;        //연결 가능한 타입
+    [SerializeField] private TileType connectType;              //연결 가능한 타입
     public TileType ConnectType
     {
         get { return connectType; }
@@ -74,6 +73,8 @@ public abstract class NodeObject : MonoBehaviour, Interactionable
         SetIsConnectTopObject(isTopObject);
         SetText();
     }
+
+    #region Line
 
     /// <summary>
     /// 해당 오브젝트와 연결이 가능한지 알려주는 함수
@@ -116,6 +117,11 @@ public abstract class NodeObject : MonoBehaviour, Interactionable
     /// </summary>
     public abstract void OnDisconnectLineChildren(int cost);
 
+    #endregion
+
+    /// <summary>
+    /// 업그레이드 함수
+    /// </summary>
     public abstract void Upgrade(int count);
 
     /// <summary>
@@ -123,18 +129,19 @@ public abstract class NodeObject : MonoBehaviour, Interactionable
     /// </summary>
     protected abstract void SetText();
 
-    public void Performed()
+    #region Input
+
+    public virtual void Performed()
     {
         MapManager.Line.CreateTempLine(this);
     }
 
-    public void Pressed()
-    {
+    public virtual void Pressed() { }
 
-    }
-
-    public void Canceled()
+    public virtual void Canceled()
     {
         MapManager.Line.TryAdd(this);
     }
+
+    #endregion
 }

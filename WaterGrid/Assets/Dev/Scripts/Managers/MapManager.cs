@@ -8,7 +8,7 @@ public sealed class MapManager : MonoBehaviour
 
     public static LineManager Line { get { return Instance.nodeManager; } }
 
-    private readonly LineManager nodeManager = new LineManager();
+    private readonly LineManager nodeManager = new();
     private readonly NodeContainer _nodeContainer = new();
     private readonly CustomRandomList<Vector2Int> _randomList = new();
 

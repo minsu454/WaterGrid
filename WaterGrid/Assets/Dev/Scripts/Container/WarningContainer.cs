@@ -1,8 +1,25 @@
 using System.Collections.Generic;
+using Unity.VisualScripting;
+using UnityEditor;
+using UnityEngine;
 
 public sealed class WarningContainer
 {
     private readonly Dictionary<string, List<IWarningable>> _warningableDict = new();        //위험 아이콘이 붙은 리스트
+
+    public List<IWarningable> this[string name]
+    {
+        get
+        {
+            if (ContainsKey(name) is false)
+            {
+                Debug.LogError($"Is not Found Dictionary name : {name}");
+                return default;
+            }
+
+            return _warningableDict[name];
+        }
+    }
 
     /// <summary>
     /// 리스트에 추가 함수
@@ -23,28 +40,49 @@ public sealed class WarningContainer
     /// </summary>
     public void Remove(string name, IWarningable warningable)
     {
-        if (TryGetValue(name, out List<IWarningable> warningableList) is false || warningableList.Contains(warningable))
+        if (TryGetValue(name, out List<IWarningable> warningableList) is false || warningableList.Contains(warningable) is false)
         {
             return;
         }
 
         warningableList.Remove(warningable);
+        _warningableDict[name] = warningableList;
 
-        if(warningableList.Count == 0)
+        if (warningableList.Count == 0)
             _warningableDict.Remove(name);
     }
 
     /// <summary>
     /// 리스트에 검색 함수
     /// </summary>
-    public bool Contains(string name)
+    public bool ContainsKey(string name)
     {
         return _warningableDict.ContainsKey(name);
     }
 
+    /// <summary>
+    /// 리스트에 검색 시도 및 반환 함수
+    /// </summary>
     public bool TryGetValue(string name, out List<IWarningable> warningableList)
     {
         return _warningableDict.TryGetValue(name, out warningableList);
+    }
+
+    /// <summary>
+    /// Queue에 DeQueue 구현 함수
+    /// </summary>
+    public IWarningable DeQueue(string name)
+    {
+        if (ContainsKey(name) is false)
+        {
+            Debug.LogError($"Is not Found Dictionary name : {name}");
+            return default;
+        }
+
+        IWarningable warningable = _warningableDict[name][0];
+        _warningableDict[name].Remove(warningable);
+        _warningableDict[name].Add(warningable);
+        return warningable;
     }
 
     /// <summary>

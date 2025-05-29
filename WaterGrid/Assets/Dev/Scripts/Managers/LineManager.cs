@@ -184,6 +184,19 @@ public sealed class LineManager
     }
 
     /// <summary>
+    /// line 외 다른 기능 전 실행 함수
+    /// </summary>
+    public void OtherWorkConnect()
+    {
+        if (tempLine == null)
+            return;
+
+        tempLine.Disconnect();
+        lineUpdateEvent -= tempLine.OnUpdate;
+        tempLine = null;
+    }
+
+    /// <summary>
     /// 임시 선으로 변환 함수
     /// </summary>
     public void ChangeTempLine(NodeObject curParent, NodeObject children, NodeObject tempParent)

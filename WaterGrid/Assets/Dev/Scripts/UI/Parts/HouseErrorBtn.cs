@@ -18,6 +18,7 @@ public class HouseErrorBtn : UIButton
 
     protected void OnCompleted()
     {
-        
+        Transform errorTr = WarningManager.Instance.ErrorTransform(nameof(House));
+        CameraManager.Instance.MoveCamera(errorTr);
     }
 }

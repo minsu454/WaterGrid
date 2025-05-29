@@ -5,6 +5,8 @@ using UnityEngine;
 /// </summary>
 public interface IWarningable
 {
+    public UIButtonType ErrorType { get; }
+
     public string Name { get { return transform.name; } }
 
     public Transform transform { get; }

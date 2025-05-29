@@ -151,6 +151,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4bdbaae0cd8d7404192b9773d2c6d4d3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  baseIcon: {fileID: 7211629415118020332, guid: 1753f98b12e6da34db5439a47de5b03b, type: 3}
 --- !u!4 &149012848
 Transform:
   m_ObjectHideFlags: 0
@@ -468,26 +469,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 810623921762080112, guid: d22e65d5374c9e54dab06c9a1ea11e50, type: 3}
-      propertyPath: m_Sprite
-      value: 
-      objectReference: {fileID: 21300000, guid: 67eefc489b5827542bd0becd1b5f85f8, type: 3}
-    - target: {fileID: 2256320578727578128, guid: d22e65d5374c9e54dab06c9a1ea11e50, type: 3}
-      propertyPath: m_SizeDelta.x
-      value: 55
-      objectReference: {fileID: 0}
-    - target: {fileID: 2256320578727578128, guid: d22e65d5374c9e54dab06c9a1ea11e50, type: 3}
-      propertyPath: m_SizeDelta.y
-      value: 55
-      objectReference: {fileID: 0}
-    - target: {fileID: 2256320578727578128, guid: d22e65d5374c9e54dab06c9a1ea11e50, type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2256320578727578128, guid: d22e65d5374c9e54dab06c9a1ea11e50, type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: 10
-      objectReference: {fileID: 0}
     - target: {fileID: 3893678638986257809, guid: d22e65d5374c9e54dab06c9a1ea11e50, type: 3}
       propertyPath: m_Name
       value: InGame_UI
@@ -515,10 +496,6 @@ PrefabInstance:
     - target: {fileID: 5568940771994301296, guid: d22e65d5374c9e54dab06c9a1ea11e50, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5743931556008955654, guid: d22e65d5374c9e54dab06c9a1ea11e50, type: 3}
-      propertyPath: m_StartAxis
-      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6606140174825532808, guid: d22e65d5374c9e54dab06c9a1ea11e50, type: 3}
       propertyPath: m_AnchorMax.y
@@ -764,7 +741,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dd6078d26130b3e4a8ec1e5b0520ef73, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  baseIcon: {fileID: 7211629415118020332, guid: 1753f98b12e6da34db5439a47de5b03b, type: 3}
   timeSpeed: 1
 --- !u!4 &2108088019
 Transform:

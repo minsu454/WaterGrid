@@ -1,29 +1,41 @@
+using Common.Event;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using static Common.Event.Args.EventArgs;
 
 public abstract class UIButton : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 {
     [Header(nameof(UIButton))]
-    [SerializeField] private int count;
-    public int Count
-    {
-        get { return count; }
-
-        set
-        {
-            count = value;
-
-            if (Count == 0)
-                gameObject.SetActive(false);
-        }
-    }
+    [SerializeField] protected UIButtonType buttonType;
+    [SerializeField] protected int count;
 
     [SerializeField] protected TextMeshProUGUI text;
 
     public virtual void Init()
     {
-        Count = count;
+        EventManager.Subscribe(GameEventType.ButtonEvent, OnActiveEvent);
+        OnActiveEvent(new ButtonArgs(buttonType, count));
+    }
+
+    /// <summary>
+    /// gameObject 꺼졌을 때 켜주는 이벤트 함수
+    /// </summary>
+    private void OnActiveEvent(object args)
+    {
+        ButtonArgs buttonArgs = args as ButtonArgs;
+
+        if (buttonArgs == null || buttonArgs.type != buttonType)
+            return;
+
+        count = buttonArgs.count;
+
+        if (count == 0)
+            gameObject.SetActive(false);
+        else
+            gameObject.SetActive(true);
+
+        SetUseText();
     }
 
     public abstract void OnPointerDown(PointerEventData eventData);
@@ -33,5 +45,10 @@ public abstract class UIButton : MonoBehaviour, IPointerDownHandler, IPointerUpH
     protected void SetUseText()
     {
         text.text = count.ToString();
+    }
+
+    private void OnDestroy()
+    {
+        EventManager.Unsubscribe(GameEventType.ButtonEvent, OnActiveEvent);
     }
 }

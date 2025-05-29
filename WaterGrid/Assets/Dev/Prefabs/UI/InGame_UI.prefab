@@ -194,6 +194,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d45834f091c72bb4d9d4e9fe0abfd734, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  buttonType: 3
   count: 0
   text: {fileID: 6011828019133341144}
 --- !u!114 &8230859026056150248
@@ -346,8 +347,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 85, y: 85}
+  m_AnchoredPosition: {x: 0, y: 10}
+  m_SizeDelta: {x: 55, y: 55}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &3581708664003095832
 CanvasRenderer:
@@ -377,7 +378,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 7fba148a4e17c3e40a00513be0516231, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 67eefc489b5827542bd0becd1b5f85f8, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -523,6 +524,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: afd14424419e76644884907b81f9a97d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  buttonType: 1
   count: 99
   text: {fileID: 8606002533852037230}
   dragUI: {fileID: 8579656502001674364}
@@ -976,8 +978,6 @@ MonoBehaviour:
   clockUI: {fileID: 96299944317801770}
   errorlayout: {fileID: 7759498290790874807}
   uselayout: {fileID: 5065164729299509668}
-  hammerBtn: {fileID: 1579471720159527331}
-  PumpBtn: {fileID: 5730315697607537267}
 --- !u!223 &7113949496668668747
 Canvas:
   m_ObjectHideFlags: 0
@@ -1610,6 +1610,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1ae2ea7b87c54494897cd3146581391d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  buttonType: 0
   count: 0
   text: {fileID: 329245771587441697}
   dragUI: {fileID: 8579656502001674364}
@@ -1756,6 +1757,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6641ca726418e4c48907360e29955cc2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  buttonType: 2
   count: 0
   text: {fileID: 3792424124894533907}
 --- !u!222 &5437632457744266192
@@ -2561,7 +2563,7 @@ MonoBehaviour:
     m_Bottom: 0
   m_ChildAlignment: 0
   m_StartCorner: 0
-  m_StartAxis: 0
+  m_StartAxis: 1
   m_CellSize: {x: 100, y: 100}
   m_Spacing: {x: 0, y: 0}
   m_Constraint: 0

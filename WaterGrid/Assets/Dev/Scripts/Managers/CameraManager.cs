@@ -69,6 +69,16 @@ public class CameraManager : MonoBehaviour
         halfWidth = halfHeight * Screen.width / Screen.height;
     }
 
+    public void MoveCamera(Transform errorTr)
+    {
+        Vector2 touchScreenPos = errorTr.position;
+
+        touchScreenPos.x = Mathf.Clamp(touchScreenPos.x, bounds.min.x + halfWidth, bounds.max.x - halfWidth);
+        touchScreenPos.y = Mathf.Clamp(touchScreenPos.y, bounds.min.y + halfHeight, bounds.max.y - halfHeight);
+
+        main.transform.position = (Vector3)touchScreenPos + (Vector3.forward * cameraZ);
+    }
+
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.magenta;

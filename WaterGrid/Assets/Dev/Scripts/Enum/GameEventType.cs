@@ -3,4 +3,5 @@
 /// </summary>
 public enum GameEventType
 {
+    ButtonEvent,
 }

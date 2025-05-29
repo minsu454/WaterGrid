@@ -86,6 +86,4 @@ public sealed class NodeContainer
     {
         return _nodeDict.TryGetValue(data, out node);
     }
-
-
 }
