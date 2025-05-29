@@ -38,6 +38,17 @@ public abstract class UIButton : MonoBehaviour, IPointerDownHandler, IPointerUpH
         SetUseText();
     }
 
+    /// <summary>
+    /// gameObject 꺼졌을 때 켜주는 이벤트 함수(내부용)
+    /// </summary>
+    protected void OnActiveEvent()
+    {
+        if (count == 0)
+            gameObject.SetActive(false);
+
+        SetUseText();
+    }
+
     public abstract void OnPointerDown(PointerEventData eventData);
 
     public abstract void OnPointerUp(PointerEventData eventData);

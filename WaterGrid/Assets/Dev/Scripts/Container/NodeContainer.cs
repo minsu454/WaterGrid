@@ -41,12 +41,13 @@ public sealed class NodeContainer
             case TileType.House:
                 node = housePool.GetObject();
                 break;
-            case TileType.Pump:
-                node = pumpPool.GetObject();
-                break;
             case TileType.Water:
                 node = waterPool.GetObject();
                 break;
+            case TileType.Pump:
+                node = pumpPool.GetObject();
+                node.gameObject.SetActive(true);
+                return;
             default:
                 return;
         }
@@ -54,6 +55,30 @@ public sealed class NodeContainer
         node.gameObject.SetActive(true);
         node.transform.position = hexGrid.CellToWorld((Vector3Int)data);
         _nodeDict.Add(data, node);
+    }
+
+    /// <summary>
+    /// 노드 추가 함수
+    /// </summary>
+    public void AddedByPlayer(Vector2 pos, TileType type)
+    {
+        NodeObject node = default;
+
+        switch (type)
+        {
+            case TileType.Pump:
+                node = pumpPool.GetObject();
+                break;
+            case TileType.Water:
+                node = waterPool.GetObject();
+                break;
+            default:
+                Debug.LogError($"default TileType: {type}");
+                return;
+        }
+
+        node.gameObject.SetActive(true);
+        node.transform.position = pos;
     }
 
     /// <summary>

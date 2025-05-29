@@ -60,6 +60,9 @@ public sealed class MapManager : MonoBehaviour
         nodeManager.OnUpdate();
     }
 
+    /// <summary>
+    /// 난이도 상승하는 함수
+    /// </summary>
     public void UpgradeMap()
     {
         Vector2Int vec = _randomList.RandomPick();
@@ -72,6 +75,14 @@ public sealed class MapManager : MonoBehaviour
         {
             _nodeContainer.Add(vec);
         }
+    }
+    
+    /// <summary>
+    /// 노드 추가해주는 함수
+    /// </summary>
+    public void AddNode(Vector2 pos, TileType type)
+    {
+        _nodeContainer.AddedByPlayer(pos, type);
     }
 
     private void OnDestroy()

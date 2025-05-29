@@ -40,6 +40,7 @@ public class HammerBtn : UIDragButton
 
             pump.Upgrade(upgradeCount);
             count--;
+            OnActiveEvent();
             SetUseText();
         }
     }
