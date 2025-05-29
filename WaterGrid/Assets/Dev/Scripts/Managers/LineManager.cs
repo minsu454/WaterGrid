@@ -78,21 +78,6 @@ public sealed class LineManager
     }
 
     /// <summary>
-    /// 최상위 오브젝트와 연결되어 있는지 설정해주는 함수
-    /// </summary>
-    private void SetConnectTopObject(NodeObject parent, NodeObject children, bool value)
-    {
-        children.SetIsConnectTopObject(value);
-        if (_lineContainer.TryGetValue(children, out List<(NodeObject key, Line value)> tupleList) is false)
-            return;
-
-        foreach (var tuple in tupleList)
-        {
-            SetConnectTopObject(children, tuple.key, value);
-        }
-    }
-
-    /// <summary>
     /// 임시 라인 제작 함수
     /// </summary>
     public void CreateTempLine(NodeObject firstObj)
@@ -138,7 +123,7 @@ public sealed class LineManager
 
         if (parent.IsConnectTopObject is true)
         {
-            SetConnectTopObject(parent, children, true);
+            _lineContainer.SetConnectTopObject(parent, children, true);
         }
 
         parent.OnConnectLineChildren(children.MyCost);
@@ -155,7 +140,7 @@ public sealed class LineManager
     public void DisconnectTempLine(NodeObject parent, NodeObject children)
     {
         _lineContainer.Remove(parent, children);
-        SetConnectTopObject(parent, children, false);
+        _lineContainer.SetConnectTopObject(parent, children, false);
         DeleteTempLine();
     }
 
@@ -164,9 +149,12 @@ public sealed class LineManager
     /// </summary>
     public void DisconnectLine(NodeObject parent, NodeObject children)
     {
+        if (parent == null)
+            return;
+
         Line line = _lineContainer.Remove(parent, children);
         line.Disconnect();
-        SetConnectTopObject(parent, children, false);
+        _lineContainer.SetConnectTopObject(parent, children, false);
     }
 
     /// <summary>
@@ -174,13 +162,19 @@ public sealed class LineManager
     /// </summary>
     public void DeleteTempLine()
     {
+        tempInteractionable = null;
+
         if (tempLine == null)
             return;
 
         tempLine.Disconnect();
         lineUpdateEvent -= tempLine.OnUpdate;
         tempLine = null;
-        tempInteractionable = null;
+    }
+
+    public void DeleteAllLine(NodeObject parent)
+    {
+        _lineContainer.RemoveAll(parent);
     }
 
     /// <summary>
@@ -202,7 +196,7 @@ public sealed class LineManager
     public void ChangeTempLine(NodeObject curParent, NodeObject children, NodeObject tempParent)
     {
         _lineContainer.Remove(curParent, children);
-        SetConnectTopObject(curParent, children, false);
+        _lineContainer.SetConnectTopObject(curParent, children, false);
         tempInteractionable = tempParent;
         tempLine.TempConnect(tempParent.transform);
     }

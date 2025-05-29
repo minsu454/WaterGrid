@@ -16,9 +16,10 @@ public class Pump : NodeObject, IObjectPoolable<Pump>, IWarningable
     public event Action<Pump> ReturnEvent;
 
     private float curTime = 0;
-    private const float moveTimer = 2f;
+    private const float moveTimer = 1.5f;
     private bool isMyTr = true;
     private bool isConnectMouse = false;
+    private bool isFirstIn = false;
 
     public override bool IsConnectCost(int cost)
     {
@@ -81,6 +82,16 @@ public class Pump : NodeObject, IObjectPoolable<Pump>, IWarningable
         
     }
 
+    public override void Performed()
+    {
+        base.Performed();
+
+        curTime = 0;
+        isMyTr = true;
+        isFirstIn = false;
+        isConnectMouse = false;
+    }
+
     public override void Pressed()
     {
         base.Pressed();
@@ -91,23 +102,19 @@ public class Pump : NodeObject, IObjectPoolable<Pump>, IWarningable
             return;
         }
 
-        Debug.Log("in");
-
         curTime += Time.deltaTime;
 
-        if (moveTimer <= curTime)
+        if (moveTimer > curTime)
+            return;
+        else if (moveTimer <= curTime && isFirstIn is false)
         {
-            transform.position = InputManager.InputWorldPoint;
+            MapManager.Line.DisconnectLine(parentNodeObject, this);
+            MapManager.Line.DeleteAllLine(this);
             MapManager.Line.OtherWorkConnect();
             isConnectMouse = true;
+            isFirstIn = true;
         }
-    }
 
-    public override void Canceled()
-    {
-        base.Canceled();
-        curTime = 0;
-        isMyTr = true;
-        isConnectMouse = false; 
+        transform.position = InputManager.InputWorldPoint;
     }
 }

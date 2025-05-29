@@ -60,11 +60,34 @@ public sealed class LineContainer
         parent.OnDisconnectLineParent(children.MyCost);
         children.OnDisconnectLineChildren(parent.MyCost);
         tupleList.Remove(tuple);
+        _lineDict[parent] = tupleList;
 
         if (tupleList.Count == 0)
             _lineDict.Remove(parent);
 
         return tuple.value;
+    }
+
+    /// <summary>
+    /// 라인 전부 삭제 함수
+    /// </summary>
+    public void RemoveAll(NodeObject parent)
+    {
+        if (_lineDict.TryGetValue(parent, out List<(NodeObject key, Line value)> tupleList) is false)
+            return;
+
+        foreach ((NodeObject key, Line value) tuple in tupleList)
+        {
+            parent.OnDisconnectLineParent(tuple.key.MyCost);
+            tuple.key.OnDisconnectLineChildren(parent.MyCost);
+
+            SetConnectTopObject(parent, tuple.key, false);
+
+            tuple.value.Disconnect();
+        }
+
+        _lineDict[parent].Clear();
+        _lineDict.Remove(parent);
     }
 
     /// <summary>
@@ -98,4 +121,18 @@ public sealed class LineContainer
         return true;
     }
 
+    /// <summary>
+    /// 최상위 오브젝트와 연결되어 있는지 설정해주는 함수
+    /// </summary>
+    public void SetConnectTopObject(NodeObject parent, NodeObject children, bool value)
+    {
+        children.SetIsConnectTopObject(value);
+        if (TryGetValue(children, out List<(NodeObject key, Line value)> tupleList) is false)
+            return;
+
+        foreach (var tuple in tupleList)
+        {
+            SetConnectTopObject(children, tuple.key, value);
+        }
+    }
 }
