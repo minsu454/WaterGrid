@@ -31,7 +31,7 @@ public class HammerBtn : UIDragButton
 
     protected override void OnCompleted()
     {
-        if (MapManager.Line.GetSelected(out Interactionable interaction) is false)
+        if (InGameLoader.Map.Line.GetSelected(out Interactionable interaction) is false)
             return;
 
         if (interaction is Pump)

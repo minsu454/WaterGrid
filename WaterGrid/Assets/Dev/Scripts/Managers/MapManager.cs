@@ -1,43 +1,37 @@
+using Common.Objects;
 using Common.Save;
 using UnityEngine;
 
-public sealed class MapManager : MonoBehaviour
+[RequireComponent(typeof(Grid))]
+public sealed class MapManager : MonoBehaviour, IInit
 {
-    private static MapManager instance;
-    public static MapManager Instance { get { return instance; } }
+    private readonly LineManager LineManager = new();
+    public LineManager Line { get { return LineManager; } }
 
-    public static LineManager Line { get { return Instance.nodeManager; } }
-
-    private readonly LineManager nodeManager = new();
     private readonly NodeContainer _nodeContainer = new();
     private readonly CustomRandomList<Vector2Int> _randomList = new();
 
     private readonly string path = $"{Application.streamingAssetsPath}/MapData/Map_1.json";
     private MapData mapData;
 
-    [Header("Node")]
-    [SerializeField] private GameObject housePrefab;
-    [SerializeField] private GameObject pumpPrefab;
-    [SerializeField] private GameObject waterPrefab;
-
-    [Header("Line")]
-    [SerializeField] private GameObject linePrefab;
-
     [Header("Grid")]
     [SerializeField] private Grid hexGrid;
-
-    private void Awake()
-    {
-        instance = this;
-        Init();
-    }
 
     public void Init()
     {
         mapData = SaveService.Load<MapData>(path);
 
+        GameObject housePrefab = ObjectManager.Return<GameObject>("House");
+        GameObject pumpPrefab = ObjectManager.Return<GameObject>("Pump");
+        GameObject waterPrefab = ObjectManager.Return<GameObject>("Water");
+        GameObject linePrefab = ObjectManager.Return<GameObject>("Line");
+
+        hexGrid = GetComponent<Grid>();
+        hexGrid.cellLayout = GridLayout.CellLayout.Hexagon;
+        hexGrid.cellSize = new Vector3(0.8659766f, 1f, 1f);
+
         _nodeContainer.Init(housePrefab, pumpPrefab, waterPrefab, hexGrid, mapData.TileDataList);
-        nodeManager.Init(linePrefab);
+        LineManager.Init(linePrefab);
         InitRandomList(mapData);
     }
 
@@ -57,7 +51,7 @@ public sealed class MapManager : MonoBehaviour
 
     private void Update()
     {
-        nodeManager.OnUpdate();
+        LineManager.OnUpdate();
     }
 
     /// <summary>
@@ -83,10 +77,5 @@ public sealed class MapManager : MonoBehaviour
     public void AddNode(Vector2 pos, TileType type)
     {
         _nodeContainer.AddedByPlayer(pos, type);
-    }
-
-    private void OnDestroy()
-    {
-        instance = null;
     }
 }

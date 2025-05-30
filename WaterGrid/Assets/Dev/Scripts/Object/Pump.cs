@@ -96,7 +96,7 @@ public class Pump : NodeObject, IObjectPoolable<Pump>, IWarningable
     {
         base.Pressed();
 
-        if (isMyTr is false || ((MapManager.Line.GetSelected(out Interactionable interaction) is false || interaction != (Interactionable)this) && isConnectMouse is false))
+        if (isMyTr is false || ((InGameLoader.Map.Line.GetSelected(out Interactionable interaction) is false || interaction != (Interactionable)this) && isConnectMouse is false))
         {
             isMyTr = false;
             return;
@@ -108,9 +108,9 @@ public class Pump : NodeObject, IObjectPoolable<Pump>, IWarningable
             return;
         else if (moveTimer <= curTime && isFirstIn is false)
         {
-            MapManager.Line.DisconnectLine(parentNodeObject, this);
-            MapManager.Line.DeleteAllLine(this);
-            MapManager.Line.OtherWorkConnect();
+            InGameLoader.Map.Line.DisconnectLine(parentNodeObject, this);
+            InGameLoader.Map.Line.DeleteAllLine(this);
+            InGameLoader.Map.Line.OtherWorkConnect();
             isConnectMouse = true;
             isFirstIn = true;
         }

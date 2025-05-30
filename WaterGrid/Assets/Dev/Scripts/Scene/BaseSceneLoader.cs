@@ -10,7 +10,7 @@ using UnityEngine;
 public abstract class BaseSceneLoader<T> : MonoBehaviour, IAddressable, IInit where T : BaseSceneLoader<T>
 {
     private static T instance;
-    public static T Instance
+    protected static T Instance
     {
         get
         {

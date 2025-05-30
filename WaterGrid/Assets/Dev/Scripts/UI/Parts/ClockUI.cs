@@ -34,7 +34,7 @@ public class ClockUI : MonoBehaviour
     private void OnCompleted()
     {
         SetDay();
-        MapManager.Instance.UpgradeMap();
+        InGameLoader.Map.UpgradeMap();
     }
 
     private void SetDay()

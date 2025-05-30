@@ -16,7 +16,37 @@ MonoBehaviour:
   m_Data:
     m_SerializedData: []
   m_GUID: d0182249965d7d8438553c1d6cded3c9
-  m_SerializeEntries: []
+  m_SerializeEntries:
+  - m_GUID: 1753f98b12e6da34db5439a47de5b03b
+    m_Address: WarningIcon
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - InGame
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 62690248be8610b49915f7b549290a65
+    m_Address: Water
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - InGame
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: ed6654a72f4ee7c47855453be220acf9
+    m_Address: House
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - InGame
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: f066ca108b2c01042bf0ff2cfaa22c93
+    m_Address: Pump
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - InGame
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: fca000b32dc970e49a321826ed218926
+    m_Address: Line
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - InGame
+    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 8d53e569ee1c80d41b8faf3395611543, type: 2}
   m_SchemaSet:

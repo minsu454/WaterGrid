@@ -133,14 +133,14 @@ public abstract class NodeObject : MonoBehaviour, Interactionable
 
     public virtual void Performed()
     {
-        MapManager.Line.CreateTempLine(this);
+        InGameLoader.Map.Line.CreateTempLine(this);
     }
 
     public virtual void Pressed() { }
 
     public virtual void Canceled()
     {
-        MapManager.Line.TryAdd(this);
+        InGameLoader.Map.Line.TryAdd(this);
     }
 
     #endregion

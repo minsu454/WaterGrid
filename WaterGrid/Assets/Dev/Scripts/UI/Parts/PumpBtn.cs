@@ -24,7 +24,7 @@ public class PumpBtn : UIDragButton
 
     protected override void OnCompleted()
     {
-        MapManager.Instance.AddNode(InputManager.InputWorldPoint, TileType.Pump);
+        InGameLoader.Map.AddNode(InputManager.InputWorldPoint, TileType.Pump);
         count--;
         OnActiveEvent();
         SetUseText();

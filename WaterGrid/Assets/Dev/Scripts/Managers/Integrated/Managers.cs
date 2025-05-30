@@ -32,7 +32,7 @@ public sealed class Managers : MonoBehaviour
     /// <summary>
     /// 매니저 생성 함수
     /// </summary>
-    private static T CreateManager<T>(Transform parent) where T : Component, IInit
+    public static T CreateManager<T>(Transform parent) where T : Component, IInit
     {
         GameObject go = new GameObject(typeof(T).Name);
         T t = go.AddComponent<T>();

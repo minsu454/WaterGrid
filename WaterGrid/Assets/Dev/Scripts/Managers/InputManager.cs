@@ -29,10 +29,10 @@ public sealed class InputManager : MonoBehaviour
 
     private void Update()
     {
-        if (MapManager.Line.TempInteractionable == null || isPress is false)
+        if (InGameLoader.Map.Line.TempInteractionable == null || isPress is false)
             return;
 
-        MapManager.Line.TempInteractionable.Pressed();
+        InGameLoader.Map.Line.TempInteractionable.Pressed();
     }
 
     /// <summary>
@@ -75,7 +75,7 @@ public sealed class InputManager : MonoBehaviour
     /// </summary>
     private void Performed()
     {
-        if (MapManager.Line.GetSelected(out Interactionable interaction) is false)
+        if (InGameLoader.Map.Line.GetSelected(out Interactionable interaction) is false)
             return;
 
         interaction.Performed();
@@ -86,17 +86,17 @@ public sealed class InputManager : MonoBehaviour
     /// </summary>
     private void Canceled()
     {
-        if (MapManager.Line.GetSelected(out Interactionable interaction) is true)
+        if (InGameLoader.Map.Line.GetSelected(out Interactionable interaction) is true)
         {
             interaction.Canceled();
         }
-        else if (MapManager.Line.TempInteractionable is Line)
+        else if (InGameLoader.Map.Line.TempInteractionable is Line)
         {
-            MapManager.Line.CancelTempLine((Line)MapManager.Line.TempInteractionable);
+            InGameLoader.Map.Line.CancelTempLine((Line)InGameLoader.Map.Line.TempInteractionable);
         }
         else
         {
-            MapManager.Line.DeleteTempLine();
+            InGameLoader.Map.Line.DeleteTempLine();
         }
     }
 

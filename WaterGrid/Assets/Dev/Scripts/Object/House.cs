@@ -1,8 +1,5 @@
 using Common.Timer;
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Runtime.InteropServices.WindowsRuntime;
 using UnityEngine;
 
 public class House : NodeObject, IWarningable, IObjectPoolable<House>
@@ -36,7 +33,7 @@ public class House : NodeObject, IWarningable, IObjectPoolable<House>
             if (warningIcon != null)
                 return;
 
-            warningIcon = WarningManager.Instance.warningIconObjectPool.GetObject();
+            warningIcon = InGameLoader.Warning.GetObject();
             warningIcon.gameObject.SetActive(true);
             warningIcon.Init(this);
 
@@ -51,7 +48,7 @@ public class House : NodeObject, IWarningable, IObjectPoolable<House>
             warningIcon.Stop();
             warningIcon = null;
 
-            StartCoroutine(CoTimer.Loop(scoreDelayTime, () => GameManager.Instance.PlusScore(MyCost)));
+            StartCoroutine(CoTimer.Loop(scoreDelayTime, () => InGameLoader.Game.PlusScore(MyCost)));
         }
     }
 
@@ -92,7 +89,7 @@ public class House : NodeObject, IWarningable, IObjectPoolable<House>
         }
         else
         {
-            MapManager.Line.DisconnectLine(parentNodeObject, this);
+            InGameLoader.Map.Line.DisconnectLine(parentNodeObject, this);
         }
 
         myCost += count;

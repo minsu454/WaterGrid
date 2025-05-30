@@ -28,7 +28,7 @@ public class WarningIcon : MonoBehaviour, IObjectPoolable<WarningIcon>
         this.warningable = warningable;
         warningable.Outline.enabled = true;
         transform.position = warningable.transform.position + offsetVec;
-        WarningManager.Instance.Add(warningable.Name, warningable);
+        InGameLoader.Warning.Add(warningable.Name, warningable);
         ResetIcon();
     }
 
@@ -57,7 +57,7 @@ public class WarningIcon : MonoBehaviour, IObjectPoolable<WarningIcon>
     /// </summary>
     public void GameOver()
     {
-        GameManager.Instance.GameOver();
+        InGameLoader.Game.GameOver();
     }
 
     /// <summary>
@@ -85,7 +85,7 @@ public class WarningIcon : MonoBehaviour, IObjectPoolable<WarningIcon>
     public void Stop()
     {
         curCount = 0;
-        WarningManager.Instance.Remove(warningable.Name, warningable);
+        InGameLoader.Warning.Remove(warningable.Name, warningable);
         warningable.Outline.enabled = false;
         warningable = null;
         gameObject.SetActive(false);

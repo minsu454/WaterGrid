@@ -96,21 +96,21 @@ public class Line : MonoBehaviour, IObjectPoolable<Line>, Interactionable
         lineRenderer.positionCount = 3;
         OnUpdate(2, lineRenderer.GetPosition(1));
 
-        MapManager.Line.SetTempLine(this);
+        InGameLoader.Map.Line.SetTempLine(this);
     }
 
     public void Pressed()
     {
-        if (MapManager.Line.GetSelected(out Interactionable interactionable) is false)
+        if (InGameLoader.Map.Line.GetSelected(out Interactionable interactionable) is false)
             return;
 
         if (interactionable.Equals(parentNodeObject) is true)
         {
-            MapManager.Line.ChangeTempLine(parentNodeObject, childrenNodeObject, childrenNodeObject);
+            InGameLoader.Map.Line.ChangeTempLine(parentNodeObject, childrenNodeObject, childrenNodeObject);
         }
         else if (interactionable.Equals(childrenNodeObject) is true)
         {
-            MapManager.Line.ChangeTempLine(parentNodeObject, childrenNodeObject, parentNodeObject);
+            InGameLoader.Map.Line.ChangeTempLine(parentNodeObject, childrenNodeObject, parentNodeObject);
         }
         else
         {
@@ -121,6 +121,6 @@ public class Line : MonoBehaviour, IObjectPoolable<Line>, Interactionable
 
     public void Canceled()
     {
-        MapManager.Line.DeleteTempLine();
+        InGameLoader.Map.Line.DeleteTempLine();
     }
 }

@@ -10,11 +10,6 @@ public class InGame_UI : BaseSceneUI
 
     [SerializeField] private TextMeshProUGUI ScoreText;
 
-    private void Start()
-    {
-        Init();
-    }
-
     public override void Init()
     {
         base.Init();
@@ -23,7 +18,7 @@ public class InGame_UI : BaseSceneUI
         errorlayout.Init();
         uselayout.Init();
 
-        GameManager.Instance.SetScoreEvent += OnSetScore;
+        InGameLoader.Game.SetScoreEvent += OnSetScore;
     }
 
     public void Btn()
