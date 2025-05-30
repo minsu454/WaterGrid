@@ -65,7 +65,7 @@ public abstract class NodeObject : MonoBehaviour, Interactionable
         Init();
     }
 
-    public void Init()
+    public virtual void Init()
     {
         if(AreaTr != null)
             AreaTr.localScale = new Vector2(radius, radius);

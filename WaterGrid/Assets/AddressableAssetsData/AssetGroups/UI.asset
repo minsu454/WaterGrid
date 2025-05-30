@@ -23,6 +23,18 @@ MonoBehaviour:
     m_SerializedLabels:
     - Title
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 2bd7946f32042034c99bd12e31ac7d4e
+    m_Address: UI/GameClearPopup
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - InGame
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 4782155d25ff91747b163995656b1b06
+    m_Address: UI/GameOverPopup
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - InGame
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: d22e65d5374c9e54dab06c9a1ea11e50
     m_Address: UI/InGame
     m_ReadOnly: 0

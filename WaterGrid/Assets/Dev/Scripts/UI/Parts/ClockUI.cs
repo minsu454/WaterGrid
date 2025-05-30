@@ -17,7 +17,7 @@ public class ClockUI : MonoBehaviour
     public void Init()
     {
         dayText.text = type.EnumToString();
-        dotween = new DotweenEx(0, monthDuration, -360, () => { dotween = null; }).SetLoop().OnCompleted(OnCompleted);
+        dotween = new DotweenEx(0, monthDuration, -360, TimeType.InGame, () => dotween = null).SetLoop().OnCompleted(OnCompleted);
     }
 
     private void Update()

@@ -16,7 +16,7 @@ public sealed class WarningManager : MonoBehaviour, IInit
     public void Init()
     {
         warningIconObjectPool = new ObjectPool<WarningIcon>(nameof(WarningIcon), ObjectManager.Return<GameObject>("WarningIcon"), null, 10);
-        dotween = new DotweenEx(0, 1.5f, 1, () => { dotween = null; }).SetLoop(LoopType.Yoyo);
+        dotween = new DotweenEx(0, 1.5f, 1, TimeType.InGame, () => dotween = null).SetLoop(LoopType.Yoyo);
     }
 
     /// <summary>

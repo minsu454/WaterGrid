@@ -4,4 +4,5 @@
 public enum TimeType
 {
     InGame = 0,
+    UI,
 }
