@@ -1,18 +1,23 @@
 using Common.DotweenEx;
+using Common.EnumExtensions;
 using Common.Time;
+using System;
+using TMPro;
 using UnityEngine;
 
 public class ClockUI : MonoBehaviour
 {
     [SerializeField] private RectTransform clockwiseRectTr;
-    [SerializeField] private float duration;
+    [SerializeField] private float monthDuration;
+    [SerializeField] private TextMeshProUGUI dayText;
+    [SerializeField] private MonthType type = MonthType.Jan;
 
     private DotweenEx dotween;
 
-
     public void Init()
     {
-        dotween = new DotweenEx(0, duration, -360, () => { dotween = null; }).SetLoop().OnCompleted(OnCompleted);
+        dayText.text = type.EnumToString();
+        dotween = new DotweenEx(0, monthDuration, -360, () => { dotween = null; }).SetLoop().OnCompleted(OnCompleted);
     }
 
     private void Update()
@@ -28,7 +33,14 @@ public class ClockUI : MonoBehaviour
 
     private void OnCompleted()
     {
+        SetDay();
         MapManager.Instance.UpgradeMap();
+    }
+
+    private void SetDay()
+    {
+        type = (MonthType)((int)(type + 1) % 12);
+        dayText.text = type.EnumToString();
     }
 
     public void OnPause()

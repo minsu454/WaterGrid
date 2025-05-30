@@ -1,10 +1,12 @@
+using Common.Objects;
 using Common.Pool;
 using Common.Time;
+using System;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-    public static GameManager instance;
+    public static GameManager Instance;
 
     [Header("Dev")]
     [SerializeField] private int timeSpeed;
@@ -12,23 +14,41 @@ public class GameManager : MonoBehaviour
     private int score = 0;
     public int Score
     {
-        get { return score; }
+        set
+        {
+            score = value;
+            SetScoreEvent?.Invoke(score);
+        }
     }
+
+    public event Action<int> SetScoreEvent;
 
     private void Awake()
     {
-        instance = this;
+        Instance = this;
 
         TimeType.InGame.SetTime(timeSpeed);
     }
 
-    public void SetScore(int score)
+    public void PlusScore(int value)
     {
-        this.score += score;
+        Score = this.score + value;
+    }
+
+    public void GameOver()
+    {
+        TimeManager.SetTime(TimeType.InGame, 0f);
+        //Managers.UI.CreatePopup<GameOverPopup>();
+    }
+
+    public void GameClear()
+    {
+        TimeManager.SetTime(TimeType.InGame, 0f);
+        //Managers.UI.CreatePopup<GameClearPopup>();
     }
 
     private void OnDestroy()
     {
-        instance = null;
+        Instance = null;
     }
 }

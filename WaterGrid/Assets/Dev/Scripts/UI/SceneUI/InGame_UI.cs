@@ -1,4 +1,5 @@
 using Common.SceneEx;
+using TMPro;
 using UnityEngine;
 
 public class InGame_UI : BaseSceneUI
@@ -7,7 +8,9 @@ public class InGame_UI : BaseSceneUI
     [SerializeField] private UIGridLayout errorlayout;
     [SerializeField] private UIGridLayout uselayout;
 
-    private void Awake()
+    [SerializeField] private TextMeshProUGUI ScoreText;
+
+    private void Start()
     {
         Init();
     }
@@ -19,10 +22,17 @@ public class InGame_UI : BaseSceneUI
         clockUI.Init();
         errorlayout.Init();
         uselayout.Init();
+
+        GameManager.Instance.SetScoreEvent += OnSetScore;
     }
 
     public void Btn()
     {
         SceneManagerEx.LoadingAndNextScene(SceneType.Title);
+    }
+
+    public void OnSetScore(int score)
+    {
+        ScoreText.text = score.ToString();
     }
 }

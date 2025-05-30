@@ -13,7 +13,7 @@ public class SoundPlayer : MonoBehaviour, IObjectPoolable<SoundPlayer>
 
     private void OnEnable()
     {
-        StartCoroutine(CoTimer.Start(delay, () => ReturnEvent.Invoke(this)));
+        StartCoroutine(CoTimer.Timer(delay, () => ReturnEvent.Invoke(this)));
     }
 
     /// <summary>

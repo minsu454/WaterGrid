@@ -46,7 +46,6 @@ public class WarningIcon : MonoBehaviour, IObjectPoolable<WarningIcon>
             curCount += TimeType.InGame.Get() * Time.deltaTime;
         else
         {
-            TimeManager.SetTime(TimeType.InGame, 0f);
             GameOver();
         }
 
@@ -58,7 +57,7 @@ public class WarningIcon : MonoBehaviour, IObjectPoolable<WarningIcon>
     /// </summary>
     public void GameOver()
     {
-        Debug.Log("GameOver");
+        GameManager.Instance.GameOver();
     }
 
     /// <summary>

@@ -46,8 +46,7 @@ public sealed class NodeContainer
                 break;
             case TileType.Pump:
                 node = pumpPool.GetObject();
-                node.gameObject.SetActive(true);
-                return;
+                break;
             default:
                 return;
         }

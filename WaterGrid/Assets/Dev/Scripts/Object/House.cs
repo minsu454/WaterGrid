@@ -1,3 +1,4 @@
+using Common.Timer;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -18,6 +19,9 @@ public class House : NodeObject, IWarningable, IObjectPoolable<House>
 
     public event Action<House> ReturnEvent;
 
+    private Coroutine coScore;
+    private float scoreDelayTime = 3f;
+
     public override bool IsConnectCost(int cost)
     {
         return true;
@@ -35,6 +39,9 @@ public class House : NodeObject, IWarningable, IObjectPoolable<House>
             warningIcon = WarningManager.Instance.warningIconObjectPool.GetObject();
             warningIcon.gameObject.SetActive(true);
             warningIcon.Init(this);
+
+            if(coScore != null)
+                StopCoroutine(coScore);
         }
         else
         {
@@ -43,6 +50,8 @@ public class House : NodeObject, IWarningable, IObjectPoolable<House>
 
             warningIcon.Stop();
             warningIcon = null;
+
+            StartCoroutine(CoTimer.Loop(scoreDelayTime, () => GameManager.Instance.PlusScore(MyCost)));
         }
     }
 
