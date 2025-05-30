@@ -417,10 +417,11 @@ public class HexMapEditorWindow : CustomWindow<HexMapEditorWindow>
 
             gridWidth = loadMapData.Width;
             gridHeight = loadMapData.Height;
-            mapBounds = loadMapData.Bounds;
             _areaList = loadMapData.AreaDataList;
-        }
 
+            mapBounds = loadMapData.Bounds;
+            ReverseOffsetFromBounds();
+        }
         UpdateMapBound();
     }
 
@@ -464,6 +465,50 @@ public class HexMapEditorWindow : CustomWindow<HexMapEditorWindow>
         float maxY = worldPositions.Max(p => p.y) + radius + offsetY;
 
         mapBounds = new Bounds2D(new Vector2(minX, minY), new Vector2(maxX, maxY));
+    }
+
+    /// <summary>
+    /// offset 역산 함수
+    /// </summary>
+    private void ReverseOffsetFromBounds()
+    {
+        int qOffset = -gridWidth / 2;
+        int rOffset = -gridHeight / 2;
+
+        List<Vector2> worldPositions = new();
+
+        for (int r = 0; r < gridHeight; r++)
+        {
+            for (int q = 0; q < gridWidth; q++)
+            {
+                int qr = q + qOffset;
+                int rr = r + rOffset;
+
+                Vector2 worldPos;
+                if (rr % 2 != 0 && rr < 0)
+                {
+                    qr += 1;
+                    worldPos = HexUtility.HexToWorld2D(qr, rr, tileSize);
+                    qr -= 1;
+                }
+                else
+                {
+                    worldPos = HexUtility.HexToWorld2D(qr, rr, tileSize);
+                }
+
+                worldPositions.Add(worldPos);
+            }
+        }
+
+        float radius = tileSize;
+
+        float minX = worldPositions.Min(p => p.x);
+        float maxX = worldPositions.Max(p => p.x);
+        float minY = worldPositions.Min(p => p.y);
+        float maxY = worldPositions.Max(p => p.y);
+
+        offsetX = Math.Abs(mapBounds.min.x - (minX - radius));
+        offsetY = Math.Abs(mapBounds.min.y - (minY - radius));
     }
 
     #region ClickEvent
