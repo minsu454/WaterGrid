@@ -1,3 +1,4 @@
+using Common.DotweenEx;
 using Common.Timer;
 using System;
 using UnityEngine;
@@ -16,8 +17,14 @@ public class House : NodeObject, IWarningable, IObjectPoolable<House>
 
     public event Action<House> ReturnEvent;
 
-    private Coroutine coScore;
+    private DotweenEx dotween;
     private float scoreDelayTime = 3f;
+
+    public override void Init()
+    {
+        dotween = new DotweenEx(0, scoreDelayTime, 1, TimeType.InGame, () => dotween = null).SetLoop().OnCompleted(() => InGameLoader.Game.PlusScore(MyCost));
+        base.Init();
+    }
 
     public override bool IsConnectCost(int cost)
     {
@@ -37,8 +44,7 @@ public class House : NodeObject, IWarningable, IObjectPoolable<House>
             warningIcon.gameObject.SetActive(true);
             warningIcon.Init(this);
 
-            if(coScore != null)
-                StopCoroutine(coScore);
+            dotween.Stop();
         }
         else
         {
@@ -48,7 +54,7 @@ public class House : NodeObject, IWarningable, IObjectPoolable<House>
             warningIcon.Stop();
             warningIcon = null;
 
-            StartCoroutine(CoTimer.Loop(scoreDelayTime, () => InGameLoader.Game.PlusScore(MyCost)));
+            dotween.ReStart();
         }
     }
 
@@ -99,6 +105,11 @@ public class House : NodeObject, IWarningable, IObjectPoolable<House>
     public void SetOutLineAlpha(float value)
     {
         outline.color.a = value;
+    }
+
+    private void Update()
+    {
+        dotween.OnUpdate();
     }
 
     private void OnDisable()
