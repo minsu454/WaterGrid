@@ -23,7 +23,7 @@ public class InGame_UI : BaseSceneUI
 
     public void Back()
     {
-        
+        Managers.UI.CreatePopup<PausePopup>();
     }
 
     public void OnSetScore(int score)

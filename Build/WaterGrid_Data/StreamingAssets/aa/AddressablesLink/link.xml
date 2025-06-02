@@ -1,6 +1,7 @@
 <linker>
   <assembly fullname="Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
     <type fullname="ClockUI" preserve="all" />
+    <type fullname="DevValue" preserve="all" />
     <type fullname="GameClearPopup" preserve="all" />
     <type fullname="GameOverPopup" preserve="all" />
     <type fullname="HammerBtn" preserve="all" />
@@ -8,7 +9,9 @@
     <type fullname="HouseErrorBtn" preserve="all" />
     <type fullname="InGame_UI" preserve="all" />
     <type fullname="InGameLoader" preserve="all" />
+    <type fullname="ItemPopup" preserve="all" />
     <type fullname="Line" preserve="all" />
+    <type fullname="PausePopup" preserve="all" />
     <type fullname="Pump" preserve="all" />
     <type fullname="PumpBtn" preserve="all" />
     <type fullname="PumpErrorBtn" preserve="all" />
