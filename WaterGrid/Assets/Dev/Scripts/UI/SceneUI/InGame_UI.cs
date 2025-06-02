@@ -21,9 +21,9 @@ public class InGame_UI : BaseSceneUI
         InGameLoader.Game.SetScoreEvent += OnSetScore;
     }
 
-    public void Btn()
+    public void Back()
     {
-        SceneManagerEx.LoadingAndNextScene(SceneType.Title);
+        
     }
 
     public void OnSetScore(int score)

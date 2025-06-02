@@ -6,10 +6,10 @@ using UnityEngine;
 
 public class ItemPopup : BasePopupUI
 {
-    private int getPumpCount;                                  //펌프 얻는 갯수
-    [SerializeField] private TextMeshProUGUI pumpText;      //펌프 갯수 텍스트
-    private int getHammerCount;                                //해머 얻는 갯수
-    [SerializeField] private TextMeshProUGUI hammerText;    //해머 갯수 텍스트
+    private int getPumpCount;                                   //펌프 얻는 갯수
+    [SerializeField] private TextMeshProUGUI pumpText;          //펌프 갯수 텍스트
+    private int getHammerCount;                                 //해머 얻는 갯수
+    [SerializeField] private TextMeshProUGUI hammerText;        //해머 갯수 텍스트
 
     public override void Init<T>(T option)
     {

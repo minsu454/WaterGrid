@@ -1,3 +1,4 @@
+using Assets.SimpleSpinner;
 using Common.Objects;
 using Common.SceneEx;
 using Cysharp.Threading.Tasks;
@@ -6,12 +7,17 @@ using UnityEngine.UI;
 
 public class LoadingUI : BaseSceneUI
 {
-    [SerializeField] private Image? progressBar;
-    private float fillAmount;
+    [Header("ProgressBar")]
+    [SerializeField] private Image progressBar;
 
+    [Header("Spinner")]
+    [SerializeField] private SimpleSpinner spinner;
+    private float fillAmount;
 
     private async void Start()
     {
+        if (spinner != null)
+            spinner.Init();
         await LoadSceneProcessAsync();
     }
 
@@ -21,7 +27,7 @@ public class LoadingUI : BaseSceneUI
     private async UniTask LoadSceneProcessAsync()
     {
         fillAmount = 0.0f;
-        progressBar.fillAmount = fillAmount;
+        SetProgressBar();
 
         await ObjectManager.Add(SceneManagerEx.NextScene);
         AsyncOperation op = SceneManagerEx.LoadNextSceneAsync();
@@ -45,8 +51,14 @@ public class LoadingUI : BaseSceneUI
                     return;
                 }
             }
-            progressBar.fillAmount = fillAmount;
+            SetProgressBar();
         }
     }
 
+
+    private void SetProgressBar()
+    {
+        if (progressBar != null)
+            progressBar.fillAmount = fillAmount;
+    }
 }

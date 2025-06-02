@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using static UnityEngine.RuleTile.TilingRuleOutput;
 
 namespace Assets.SimpleSpinner
 {
@@ -26,13 +27,14 @@ namespace Assets.SimpleSpinner
         private Image _image;
         private float _period;
 
-        public void Start()
+        public void Init()
         {
             _image = GetComponent<Image>();
+            transform.localEulerAngles = new Vector3(0, 0, 0);
             _period = RandomPeriod ? Random.Range(0f, 1f) : 0;
         }
 
-        public void Update()
+        private void Update()
         {
             if (Rotation)
             {
