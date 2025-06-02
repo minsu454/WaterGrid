@@ -9,7 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6e62effc908b3bc499d892f2d40e4efa, type: 3}
-  m_Name: LoadingSO
+  m_Script: {fileID: 11500000, guid: 0c23b5224a1b6994c9c47745f77e613e, type: 3}
+  m_Name: BasicDev
   m_EditorClassIdentifier: 
-  poolDataList: []
+  TimeScale: 1
+  MonthType: 0
+  hammerCount: 1
+  pumpCount: 2

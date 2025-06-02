@@ -2,15 +2,19 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using static Common.Event.Args.EventArgs;
 
 public class HammerBtn : UIDragButton
 {
-    [SerializeField] private int upgradeCount;
+    private int upgradeCount;
 
     public override void Init()
     {
         base.Init();
-        SetUseText();
+        count = InGameLoader.Item.Hammer;
+        upgradeCount = InGameLoader.Dev.HammerUpgradeCount;
+
+        OnActiveEvent();
     }
 
     public override void OnPointerDown(PointerEventData eventData)

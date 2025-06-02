@@ -4,11 +4,8 @@ using Common.Time;
 using System;
 using UnityEngine;
 
-public class GameManager : MonoBehaviour, IInit
+public sealed class GameManager : MonoBehaviour, IInit
 {
-    [Header("Dev")]
-    [SerializeField] private int timeSpeed = 1;
-
     private int score = 0;
     public int Score
     {
@@ -27,7 +24,7 @@ public class GameManager : MonoBehaviour, IInit
 
     public void Init()
     {
-        TimeType.InGame.SetTime(timeSpeed);
+        
     }
 
     public void PlusScore(int value)

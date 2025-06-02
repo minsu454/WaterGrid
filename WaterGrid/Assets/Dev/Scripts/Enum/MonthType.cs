@@ -1,5 +1,5 @@
 /// <summary>
-/// 버튼 타입
+/// 한달 타입
 /// </summary>
 public enum MonthType
 {

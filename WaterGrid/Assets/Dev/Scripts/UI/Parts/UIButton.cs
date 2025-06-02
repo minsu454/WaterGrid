@@ -8,14 +8,13 @@ public abstract class UIButton : MonoBehaviour, IPointerDownHandler, IPointerUpH
 {
     [Header(nameof(UIButton))]
     [SerializeField] protected UIButtonType buttonType;
-    [SerializeField] protected int count;
+    [SerializeField] protected int count = 0;
 
     [SerializeField] protected TextMeshProUGUI text;
 
     public virtual void Init()
     {
         EventManager.Subscribe(GameEventType.ButtonEvent, OnActiveEvent);
-        OnActiveEvent(new ButtonArgs(buttonType, count));
     }
 
     /// <summary>

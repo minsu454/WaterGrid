@@ -8,7 +8,7 @@ public class WarningIcon : MonoBehaviour, IObjectPoolable<WarningIcon>
     [SerializeField] private SpriteRenderer FillAmountRenderer;     //감지바 랜더러
 
     private float curCount = 0;
-    [SerializeField] private float maxCount;
+    private float maxCount;
 
     private IWarningable warningable = null;
     private MaterialPropertyBlock propertyBlock;                    //머터리얼 복사본 생성하지 않고 값 수정하기 위한 변수
@@ -67,6 +67,7 @@ public class WarningIcon : MonoBehaviour, IObjectPoolable<WarningIcon>
     {
         FillAmountRenderer.gameObject.SetActive(true);
         SetFillAmount(0);
+        maxCount = InGameLoader.Dev.warningCount;
     }
 
     /// <summary>

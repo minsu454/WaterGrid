@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "SO", menuName = "ScriptableObject/AddressableLoader", order = 0)]
+[CreateAssetMenu(fileName = "ResourcesSO", menuName = "ScriptableObject/AddressableLoader", order = 1)]
 public class ResourcesLoaderSO : ScriptableObject
 {
     public List<LoadAddressableData> loadDataList;

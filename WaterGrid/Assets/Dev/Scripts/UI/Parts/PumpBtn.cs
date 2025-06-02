@@ -1,13 +1,13 @@
-using TMPro;
-using UnityEngine;
 using UnityEngine.EventSystems;
+using static Common.Event.Args.EventArgs;
 
 public class PumpBtn : UIDragButton
 {
     public override void Init()
     {
         base.Init();
-        SetUseText();
+        count = InGameLoader.Item.Pump;
+        OnActiveEvent();
     }
 
     public override void OnPointerDown(PointerEventData eventData)
