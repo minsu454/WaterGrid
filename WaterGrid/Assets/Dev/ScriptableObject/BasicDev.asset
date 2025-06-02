@@ -12,7 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0c23b5224a1b6994c9c47745f77e613e, type: 3}
   m_Name: BasicDev
   m_EditorClassIdentifier: 
-  TimeScale: 1
+  monthDuration: 10
   MonthType: 0
-  hammerCount: 1
-  pumpCount: 2
+  StartHammerCount: 2
+  StartPumpCount: 1
+  GetHammerCount: 2
+  GetPumpCount: 1
+  HammerUpgradeCount: 3
+  warningCount: 14

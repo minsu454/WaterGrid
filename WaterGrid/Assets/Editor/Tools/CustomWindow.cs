@@ -4,17 +4,11 @@ using UnityEngine;
 public abstract class CustomWindow<T> : EditorWindow where T : EditorWindow
 {
     protected static T window;
-    protected MapEditorManager editorManager;
-
-    protected ComstomMapEditorController controller;
+    
 
     private void OnEnable()
     {
-        editorManager = new MapEditorManager();
-        controller = new ComstomMapEditorController();
-
         Run();
-        editorManager.LoadMapEditor();
     }
 
     /// <summary>
@@ -59,10 +53,6 @@ public abstract class CustomWindow<T> : EditorWindow where T : EditorWindow
 
     private void OnDisable()
     {
-        editorManager.LeaveMapEditor();
         Stop();
-
-        controller = null;
-        editorManager = null;
     }
 }

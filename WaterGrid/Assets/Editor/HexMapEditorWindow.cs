@@ -6,8 +6,12 @@ using System;
 using System.IO;
 using System.Linq;
 
-public class HexMapEditorWindow : CustomWindow<HexMapEditorWindow>
+public sealed class HexMapEditorWindow : CustomWindow<HexMapEditorWindow>
 {
+    private MapEditorManager editorManager;
+    private ComstomMapEditorController controller;
+
+
     private float tileSize = 0.5f;          //타일 사이즈
     private int gridWidth = 10;             //가로 갯수
     public int GridWidth
@@ -105,6 +109,9 @@ public class HexMapEditorWindow : CustomWindow<HexMapEditorWindow>
 
     protected override void Run()
     {
+        editorManager = new MapEditorManager();
+        controller = new ComstomMapEditorController();
+
         base.Run();
 
         controller.leftMouseDownEvent += OnLeftDrag;
@@ -115,6 +122,8 @@ public class HexMapEditorWindow : CustomWindow<HexMapEditorWindow>
         LoadData();
 
         GUIParts.LoadAllInFolder(EditorPath.TexturePath, out _texture2DDict);
+
+        editorManager.LoadMapEditor();
     }
 
     protected override void Stop()
@@ -127,7 +136,13 @@ public class HexMapEditorWindow : CustomWindow<HexMapEditorWindow>
         _texture2DDict = null;
 
         loadMapData = null;
+
+        editorManager.LeaveMapEditor();
+
         base.Stop();
+
+        controller = null;
+        editorManager = null;
     }
 
     #region GUI
